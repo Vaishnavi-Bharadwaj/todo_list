@@ -3,11 +3,16 @@
     <ul>
       @for(menu of menu_list; track menu.menu_id)
       {
-        <button [class.active]="selected"> <!--the selected user should stay highlighted when clicked-->
+        <button [class.active]="isActive(menu.path)" (click)="onSelectMenu(menu.path)"> <!--the selected user should stay highlighted when clicked-->
             <img [src]="'assets/icons/'+ menu.icon" [alt]="menu.name"/>
             <span>{{menu.name}}</span>
         </button>
       }
+
+      <button class="add_button">
+        <img src="assets/add_icon.png" alt="Add icon"/>
+        <span>Add</span>
+      </button>
     </ul>
   </nav>
 </div>

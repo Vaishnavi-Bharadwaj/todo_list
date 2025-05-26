@@ -1,0 +1,22 @@
+<div class="inbox-main-container"  [class.menu-open]="!isCloseMenu">
+    @if(!isCloseMenu)
+    {
+        <div class="inbox-sidebar">
+            <app-menu ></app-menu>
+        </div>
+    }
+
+    <div class="inbox_list">
+        <header>
+            <button (click)="onCloseMenu()">☰</button>
+            <span>Inbox</span>
+            <input type="text" placeholder="+ Add task" id="add_to_inbox"/>
+        </header>
+        
+        <div class="inbox-empty-list">
+            <div class="inbox_image"></div>
+            <span class="inbox_text1">No tasks</span>
+            <span class="inbox_text2">Capture all your tasks and ideas</span>
+        </div>
+    </div>
+</div>

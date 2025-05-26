@@ -1,4 +1,4 @@
-.main-container {
+.inbox-main-container {
   display: flex;
   width: 100%;
   height: 90vh; /* Set the fixed height */
@@ -8,7 +8,7 @@
 }
 
 /* Sidebar appears over content when open */
-.sidebar {
+.inbox-sidebar {
   position: fixed;
   top: 0;
   left: 0;
@@ -30,7 +30,7 @@
 
 
 /* Content section */
-.today_list {
+.inbox_list {
   flex: 1;
   padding: 2rem;
   margin-left: 0;
@@ -42,7 +42,7 @@
 }
 
 /* When menu is open, push content */
-.menu-open .today_list {
+.menu-open .inbox_list {
   margin-left: 240px;
 }
 
@@ -66,7 +66,7 @@ header span {
   font-weight: 500;
 }
 
-#add {
+#add_to_inbox {
   width: 100%;
   padding: 0.50rem 0.75rem;
   font-size: 1rem;
@@ -79,24 +79,24 @@ header span {
   
 }
 
-#add::placeholder {
+#add_to_inbox::placeholder {
   color: #bcbbbb; 
   opacity: 1;  
 }
 
-#add:focus {
+#add_to_inbox:focus {
   border-color: blue;
   outline: none;
   background-color:white;
 }
 
-.empty-list {
+.inbox-empty-list {
   margin-top: 11rem;
   text-align: center;
 }
 
-.empty-list .image {
-  background-image: url('/assets/new-tea-cup.png');
+.inbox-empty-list .inbox_image {
+  background-image: url('/assets/empty_inbox.png');
   background-size: contain;
   background-repeat: no-repeat;
   width: 180px;
@@ -104,7 +104,7 @@ header span {
   margin: auto;
 }
 
-.empty-list .text1 {
+.inbox-empty-list .inbox_text1 {
   color: black;
   font-size: 16px;
   display: block;
@@ -112,7 +112,7 @@ header span {
   font-weight: 500;
 }
 
-.empty-list .text2 {
+.inbox-empty-list .inbox_text2 {
   color: #666;
   display: block;
   font-size: 12px;
