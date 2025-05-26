@@ -1,0 +1,117 @@
+.main-container {
+  display: flex;
+  width: 100%;
+  height: 90vh; /* Set the fixed height */
+  transition: all 0.3s ease;
+  position: relative;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Sidebar appears over content when open */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 240px;
+  height: 100vh; /* full viewport height */
+  background: white; /* add bg if needed */
+  // box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  border-right: 1px solid #f2f0f0;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+}
+
+
+/* When menu closed, slide sidebar out of view */
+.menu-closed .sidebar {
+  transform: translateX(-100%);
+}
+
+
+/* Content section */
+.today_list {
+  flex: 1;
+  padding: 2rem;
+  margin-left: 0;
+  height: 90vh; /* Match sidebar and container */
+  box-sizing: border-box;
+  overflow-y: auto;
+  transition: margin-left 0.3s ease;
+  
+}
+
+/* When menu is open, push content */
+.menu-open .today_list {
+  margin-left: 240px;
+}
+
+header {
+  padding-bottom: 1rem;
+  margin-bottom: 2px;
+  margin-top:-18px;
+}
+
+header button {
+  font-size: 1.4rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right:5px;
+  color: grey
+}
+
+header span {
+  font-size: 22px;
+  font-weight: 500;
+}
+
+#add {
+  width: 100%;
+  padding: 0.50rem 0.75rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  font-family: 'Segoe UI', sans-serif;
+  border: 1px solid #f0efef;
+  background-color: #f0efef;
+  margin-top: 1rem;
+  margin-left: 6px;
+  
+}
+
+#add::placeholder {
+  color: #bcbbbb; 
+  opacity: 1;  
+}
+
+#add:focus {
+  border-color: blue;
+  outline: none;
+  background-color:white;
+}
+
+.empty-list {
+  margin-top: 11rem;
+  text-align: center;
+}
+
+.empty-list .image {
+  background-image: url('/assets/new-tea-cup.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 180px;
+  height: 150px;
+  margin: auto;
+}
+
+.empty-list .text1 {
+  color: black;
+  font-size: 18px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.empty-list .text2 {
+  color: #666;
+  display: block;
+}

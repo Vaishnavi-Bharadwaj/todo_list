@@ -1,0 +1,13 @@
+<div class="menu_sidebar">
+  <nav>
+    <ul>
+      @for(menu of menu_list; track menu.menu_id)
+      {
+        <button [class.active]="selected"> <!--the selected user should stay highlighted when clicked-->
+            <img [src]="'assets/icons/'+ menu.icon" [alt]="menu.name"/>
+            <span>{{menu.name}}</span>
+        </button>
+      }
+    </ul>
+  </nav>
+</div>

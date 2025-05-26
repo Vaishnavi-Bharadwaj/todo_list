@@ -1,0 +1,22 @@
+<div class="main-container"  [class.menu-open]="!isCloseMenu">
+    @if(!isCloseMenu)
+    {
+        <div class="sidebar">
+            <app-menu ></app-menu>
+        </div>
+    }
+
+    <div class="today_list">
+        <header>
+            <button (click)="onCloseMenu()">☰</button>
+            <span>Today</span>
+            <input type="text" placeholder="+ Add task to &quot;Inbox&quot;" id="add"/>
+        </header>
+        
+        <div class="empty-list">
+            <div class="image"></div>
+            <span class="text1">No tasks today</span>
+            <span class="text2">Relax with a cup of tea</span>
+        </div>
+    </div>
+</div>
