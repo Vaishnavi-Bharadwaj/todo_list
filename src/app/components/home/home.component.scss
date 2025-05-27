@@ -66,6 +66,7 @@ header span {
   font-weight: 500;
 }
 
+
 #add {
   width: 100%;
   padding: 0.50rem 0.75rem;
@@ -76,7 +77,7 @@ header span {
   background-color: #f0efef;
   margin-top: 1rem;
   margin-left: 6px;
-  
+
 }
 
 #add::placeholder {
@@ -88,6 +89,34 @@ header span {
   border-color: blue;
   outline: none;
   background-color:white;
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.date-input {
+  position: absolute;
+  top: 64%;
+  right: -2%;
+  transform: translateY(-50%);
+}
+
+.date-input input {
+  height: 28px;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+
+  color: #007bff; /* Change this to your desired text color */
+  text-shadow: none; /* Remove shadow if previously used to hide text */
+}
+
+.date-input input:focus {
+  border-color: #007bff;
+  outline: none;
 }
 
 .empty-list {

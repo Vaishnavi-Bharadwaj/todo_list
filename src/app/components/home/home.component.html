@@ -10,7 +10,15 @@
         <header>
             <button (click)="onCloseMenu()">☰</button>
             <span>Today</span>
-            <input type="text" placeholder="+ Add task to &quot;Inbox&quot;" id="add"/>
+            <div class="input-wrapper">
+                <input type="text" placeholder="+ Add task to &quot;Inbox&quot;" id="add" (focus)="showDate=true" (blur)="hideDatePicker()"/>
+                @if(showDate) 
+                {
+                    <div class="date-input" (mousedown)="preventBlur = true" (mouseup)="preventBlur = false">
+                        <input type="date" id="date-input" (blur)="hideDatePicker()"/>
+                    </div>
+                }
+            </div>
         </header>
         
         <div class="empty-list">

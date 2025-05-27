@@ -1,0 +1,14 @@
+<dialog open>
+    <h2>Add List</h2>
+    <form (ngSubmit)="onSubmit()">
+        <img src=""/>
+        <p>
+            <label for="name">Name</label>
+            <textarea id="name" name="name" placeholder="Name" [(ngModel)]="enteredName"></textarea>
+        </p>
+        <p class="actions">
+            <button type="button" (click)="onCancelAddList()">Cancel</button>
+            <button type="submit">Add</button>
+        </p>
+    </form>
+</dialog>

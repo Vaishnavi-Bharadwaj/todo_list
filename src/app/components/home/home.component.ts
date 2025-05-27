@@ -8,6 +8,16 @@ import { MenuComponent } from './menu/menu.component';
 })
 export class HomeComponent {
   isCloseMenu:boolean=false;
+  showDate=false;
+
+  preventBlur = false;
+
+  hideDatePicker() { 
+      if (!this.preventBlur) {
+        this.showDate = false;
+      }
+  }
+
   onCloseMenu()
   {
     this.isCloseMenu=!this.isCloseMenu; //toggle

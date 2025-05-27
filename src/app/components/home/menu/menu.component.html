@@ -1,3 +1,8 @@
+@if(isAddingTask)
+{
+  <app-list></app-list>
+}
+
 <div class="menu_sidebar">
   <nav>
     <ul>
@@ -9,7 +14,7 @@
         </button>
       }
 
-      <button class="add_button">
+      <button class="add_button" (click)="onStartAddList()">
         <img src="assets/add_icon.png" alt="Add icon"/>
         <span>Add</span>
       </button>
