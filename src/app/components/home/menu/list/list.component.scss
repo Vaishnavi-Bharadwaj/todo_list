@@ -1,0 +1,107 @@
+dialog {
+  position: fixed;
+  z-index: 9999;
+  top: 10rem;
+  left: 55%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 40rem;
+  background: linear-gradient(to right, #f5f2fa, #f9f7fc);
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: black;
+  font-weight: 600;
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.input-with-icon {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  gap: 0.75rem;
+  transition: 0.3s ease;
+}
+
+.input-with-icon:focus-within {
+  border-color: blue;
+}
+
+.input-with-icon img {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+}
+
+.input-with-icon input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background-color: transparent;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.cancel_button {
+  background-color:white;
+  color: #999;
+}
+
+.cancel_button:hover {
+  background-color: #d8d7d7;
+}
+
+button[type="submit"]:disabled {
+  background-color: #5d7fd2;   
+  color: #f0f0f0;              
+  cursor: not-allowed;         
+  box-shadow: none;            
+  opacity: 0.7;    
+}   
+
+button[type="submit"]:disabled:hover{
+  background-color: #5d7fd2;   
+}   
+
+button[type="submit"]
+{
+    background-color: blue;
+    color:white;
+}
+
+button[type="submit"]:hover {
+  background-color: rgb(120, 138, 244);
+}

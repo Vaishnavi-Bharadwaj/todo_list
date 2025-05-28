@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { DUMMY_MENU_LIST } from '../dummy-menu-list';
 import { Router } from '@angular/router';
 import { ListComponent } from './list/list.component';
@@ -11,8 +11,25 @@ import { ListComponent } from './list/list.component';
 export class MenuComponent {
   menu_list=DUMMY_MENU_LIST;
   selected!:boolean;
+  isNew!:boolean;
   isAddingTask:boolean=false;
-  constructor(private router:Router) {}
+  isDropDown!:boolean;
+  openDropdownId: string | null = null;
+
+  originalMenuIds: Set<string> = new Set();
+  constructor(private router:Router) {
+    const menu_list=localStorage.getItem('menu_list');
+    if(menu_list)
+    {
+      this.menu_list=JSON.parse(menu_list);
+    }
+
+    for(const menu of DUMMY_MENU_LIST)
+    {
+      this.originalMenuIds.add(menu.menu_id);
+    }
+  }
+
   onSelectMenu(path:string)
   {
     this.router.navigate([path]);
@@ -30,5 +47,59 @@ export class MenuComponent {
   onCancelAddList()
   {
     this.isAddingTask=false;
+  }
+
+  onAddList(data: { name: string }) 
+  {
+    const newItem = {
+      menu_id: ('m'+(this.menu_list.length + 1)).toString(),
+      name: data.name,
+      icon: 'menu-icon1.png',
+      path: '/' + data.name.toLowerCase().replace(/\s+/g, '-'),
+      
+    };
+    this.isNew= true;
+    this.menu_list.push(newItem);
+    this.saveMenu();
+    this.isAddingTask = false;
+  }
+
+  saveMenu()
+  {
+     localStorage.setItem('menu_list', JSON.stringify(this.menu_list));
+  }
+
+  onDeleteMenu(menu_id:string)
+  {
+    this.menu_list=this.menu_list.filter((menu)=>menu.menu_id!==menu_id)
+    this.saveMenu();
+  }
+
+  
+  toggleDropdown(menu_id: string) {
+    this.openDropdownId = this.openDropdownId === menu_id ? null : menu_id;
+  }
+
+  @HostListener('document:click', ['$event'])
+  handleOutsideClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.dropdown-wrapper')) {
+      this.openDropdownId = null;
+    }
+  }
+
+  //Adding tasks to each catergory
+  @Input({required:true}) category!: {
+    menu_id:string;
+    name:string;
+    icon:string;
+    path:string;
+  }
+
+  @Output() select=new EventEmitter();
+  
+  onSelectCategory()
+  {
+    this.select.emit(this.category.menu_id);
   }
 }

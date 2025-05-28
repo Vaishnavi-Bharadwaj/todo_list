@@ -1,9 +1,12 @@
 <div class="main-container"  [class.menu-open]="!isCloseMenu">
     @if(!isCloseMenu)
     {
-        <div class="sidebar">
-            <app-menu ></app-menu>
-        </div>
+        @for(c of category_list; track c.menu_id)
+        {
+            <div class="sidebar">
+                <app-menu [category]="c" (select)="onSelectCategory($event)"></app-menu>
+            </div>
+        }
     }
 
     <div class="today_list">
@@ -27,4 +30,6 @@
             <span class="text2">Relax with a cup of tea</span>
         </div>
     </div>
+
+    
 </div>

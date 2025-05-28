@@ -1,6 +1,6 @@
 @if(isAddingTask)
 {
-  <app-list></app-list>
+  <app-list (canceltask)="onCancelAddList()" (add)="onAddList($event)"></app-list>
 }
 
 <div class="menu_sidebar">
@@ -8,16 +8,36 @@
     <ul>
       @for(menu of menu_list; track menu.menu_id)
       {
-        <button [class.active]="isActive(menu.path)" (click)="onSelectMenu(menu.path)"> <!--the selected user should stay highlighted when clicked-->
-            <img [src]="'assets/icons/'+ menu.icon" [alt]="menu.name"/>
-            <span>{{menu.name}}</span>
-        </button>
-      }
+        <li>
+           @if(originalMenuIds.has(menu.menu_id)){
+            <button [class.active]="isActive(menu.path)" (click)="onSelectMenu(menu.path)"> <!--the selected user should stay highlighted when clicked-->
+              <img [src]="'assets/icons/'+ menu.icon" [alt]="menu.name"/>
+              <span>{{menu.name}}</span>
+            </button>
+           }
 
+           @else {
+            <button [class.active]="isActive(menu.path)"> <!--the selected user should stay highlighted when clicked-->
+              <img [src]="'assets/icons/'+ menu.icon" [alt]="menu.name"/>
+              <span>{{menu.name}}</span>
+              <div class="dropdown-wrapper">
+                <div class="dots-button" (click)="toggleDropdown(menu.menu_id); $event.stopPropagation()">...</div>
+                @if (openDropdownId === menu.menu_id) {
+                  <ul class="dropdown-menu">
+                    <li (click)="onDeleteMenu(menu.menu_id); $event.stopPropagation()">Delete</li>
+                  </ul>
+                }
+              </div>
+            </button>
+           }
+        </li>
+      }
+  
       <button class="add_button" (click)="onStartAddList()">
         <img src="assets/add_icon.png" alt="Add icon"/>
         <span>Add</span>
       </button>
+      
     </ul>
   </nav>
 </div>

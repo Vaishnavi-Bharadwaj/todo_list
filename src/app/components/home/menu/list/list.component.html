@@ -1,14 +1,13 @@
 <dialog open>
     <h2>Add List</h2>
     <form (ngSubmit)="onSubmit()">
-        <img src=""/>
-        <p>
-            <label for="name">Name</label>
-            <textarea id="name" name="name" placeholder="Name" [(ngModel)]="enteredName"></textarea>
-        </p>
+        <div class="input-with-icon">
+            <img src="assets/icons/menu-icon1.png" alt="Menu icon" />
+            <input type="text" id="name" name="name" placeholder="Name" required [(ngModel)]="enteredName" />
+        </div>
         <p class="actions">
-            <button type="button" (click)="onCancelAddList()">Cancel</button>
-            <button type="submit">Add</button>
+            <button class="cancel_button"  type="button" (click)="onCancelAddList()">Cancel</button>
+            <button type="submit" [disabled]="!enteredName || enteredName.trim() === ''">Add</button>
         </p>
     </form>
 </dialog>

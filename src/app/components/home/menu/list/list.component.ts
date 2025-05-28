@@ -12,7 +12,7 @@ export class ListComponent {
   @Output() add=new EventEmitter<{
     name:string;
   }>();
-  enteredName='';
+  enteredName:string='';
 
   onCancelAddList()
   {
