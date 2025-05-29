@@ -1,9 +1,12 @@
 <div class="inbox-main-container"  [class.menu-open]="!isCloseMenu">
     @if(!isCloseMenu)
     {
-        <div class="inbox-sidebar">
-            <app-menu ></app-menu>
-        </div>
+        @for(c of category_list; track c.menu_id)
+        {
+            <div class="sidebar">
+                <app-menu [category]="c" (select)="onSelectCategory($event)"></app-menu>
+            </div>
+        }
     }
 
     <div class="inbox_list">

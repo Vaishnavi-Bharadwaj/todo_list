@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MenuComponent } from './menu/menu.component';
+import { TasksComponent } from './menu/tasks/tasks.component';
 interface Category {
   menu_id: string;
   name: string;
@@ -9,7 +10,7 @@ interface Category {
 
 @Component({
   selector: 'app-home',
-  imports: [MenuComponent],
+  imports: [MenuComponent, TasksComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -40,6 +41,7 @@ export class HomeComponent {
     }
   }
 
+  
   onSelectCategory(menu_id:string)
   {
     this.category_id=menu_id;

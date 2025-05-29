@@ -17,7 +17,7 @@
            }
 
            @else {
-            <button [class.active]="isActive(menu.path)"> <!--the selected user should stay highlighted when clicked-->
+            <button [class.active]="isActive(menu.path)" (click)="onSelectCategory(menu.menu_id)"> <!--the selected user should stay highlighted when clicked-->
               <img [src]="'assets/icons/'+ menu.icon" [alt]="menu.name"/>
               <span>{{menu.name}}</span>
               <div class="dropdown-wrapper">

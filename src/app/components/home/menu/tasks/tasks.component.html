@@ -1,1 +1,38 @@
-<p>tasks works!</p>
+<div class="main-container"  [class.menu-open]="!isCloseMenu">
+    @if(!isCloseMenu)
+    {
+        @for(c of category_list; track c.menu_id)
+        {
+            <div class="sidebar">
+                <app-menu [category]="c" (select)="onSelectCategory($event)"></app-menu>
+            </div>
+        }
+    }
+    <div class="tasks_list">
+        <header>
+            <button (click)="onCloseMenu()">☰</button>
+            <span>{{ categoryName }}</span>
+            <button class="add-task-button" (click)="onToggleInput()">+ Add Task</button>
+            @if(showInput)
+            {
+                <div class="input-wrapper">
+                    <input type="text" placeholder="+ Add your tasks here" id="add" (focus)="showDate=true" (blur)="hideDatePicker()"/>
+                    @if(showDate) 
+                    {
+                        <div class="date-input" (mousedown)="preventBlur = true" (mouseup)="preventBlur = false">
+                            <input type="date" id="date-input" (blur)="hideDatePicker()"/>
+                            <button class="submit-button" type="submit"><img src="assets/submit.png"></button>
+                        </div>
+                    }
+                </div>
+            }
+        </header>
+
+        <div class="empty-list">
+            <div class="image"></div>
+            <span class="text1">No tasks</span>
+            <span class="text2">Click the input to add</span>
+        </div>
+
+    </div>
+</div>

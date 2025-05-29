@@ -1,35 +1,40 @@
-<div class="main-container"  [class.menu-open]="!isCloseMenu">
-    @if(!isCloseMenu)
-    {
-        @for(c of category_list; track c.menu_id)
+@if(!category_id)
+{
+    <div class="main-container"  [class.menu-open]="!isCloseMenu">
+        @if(!isCloseMenu)
         {
-            <div class="sidebar">
-                <app-menu [category]="c" (select)="onSelectCategory($event)"></app-menu>
-            </div>
+            @for(c of category_list; track c.menu_id)
+            {
+                <div class="sidebar">
+                    <app-menu [category]="c" (select)="onSelectCategory($event)"></app-menu>
+                </div>
+            }
         }
-    }
-
-    <div class="today_list">
-        <header>
-            <button (click)="onCloseMenu()">☰</button>
-            <span>Today</span>
-            <div class="input-wrapper">
-                <input type="text" placeholder="+ Add task to &quot;Inbox&quot;" id="add" (focus)="showDate=true" (blur)="hideDatePicker()"/>
-                @if(showDate) 
-                {
-                    <div class="date-input" (mousedown)="preventBlur = true" (mouseup)="preventBlur = false">
-                        <input type="date" id="date-input" (blur)="hideDatePicker()"/>
-                    </div>
-                }
-            </div>
-        </header>
         
-        <div class="empty-list">
-            <div class="image"></div>
-            <span class="text1">No tasks today</span>
-            <span class="text2">Relax with a cup of tea</span>
+        <div class="today_list">
+            <header>
+                <button (click)="onCloseMenu()">☰</button>
+                <span>Today</span>
+                <div class="input-wrapper">
+                    <input type="text" placeholder="+ Add task to &quot;Inbox&quot;" id="add" (focus)="showDate=true" (blur)="hideDatePicker()"/>
+                    @if(showDate) 
+                    {
+                        <div class="date-input" (mousedown)="preventBlur = true" (mouseup)="preventBlur = false">
+                            <input type="date" id="date-input" (blur)="hideDatePicker()"/>
+                        </div>
+                    }
+                </div>
+            </header>
+
+            <div class="empty-list">
+                <div class="image"></div>
+                <span class="text1">No tasks today</span>
+                <span class="text2">Relax with a cup of tea</span>
+            </div>   
         </div>
     </div>
+}
 
-    
-</div>
+@else {
+    <app-tasks [categoryId]="category_id"></app-tasks>
+}

@@ -1,0 +1,192 @@
+.main-container {
+  display: flex;
+  width: 100%;
+  height: 100vh; /* Set the fixed height */
+  transition: all 0.3s ease;
+  position: relative;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Sidebar appears over content when open */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 240px;
+  height: 100vh; /* full viewport height */
+  background: white; /* add bg if needed */
+  // box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  border-right: 1px solid #f2f0f0;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+}
+
+
+/* When menu closed, slide sidebar out of view */
+.menu-closed .sidebar {
+  transform: translateX(-100%);
+}
+
+
+/* Content section */
+.tasks_list {
+  flex: 1;
+  padding: 2rem;
+  margin-left: 0;
+  // height: calc(100vh - 60px); /* Match sidebar and container */
+  box-sizing: border-box;
+  overflow-y: auto;
+  transition: margin-left 0.3s ease;
+  
+}
+
+/* When menu is open, push content */
+.menu-open .tasks_list {
+  margin-left: 240px;
+}
+
+header {
+  padding-bottom: 1rem;
+  margin-bottom: 2px;
+  margin-top:-18px;
+}
+
+header button {
+  font-size: 1.2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right:5px;
+  color: grey
+}
+
+header span {
+  font-size: 22px;
+  font-weight: 500;
+}
+
+header .add-task-button {
+  background-color: rgb(198, 198, 198); /* Green */
+  color: black;
+  padding: 10px 16px;
+  font-size: 14.5px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-left: 8px;
+  display: flex;
+  justify-content: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+header .add-task-button:hover {
+  background-color: #888a88;
+  transform: translateY(-1px);
+}
+
+
+#add {
+  width: 100%;
+  padding: 0.50rem 0.75rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  font-family: 'Segoe UI', sans-serif;
+  border: 1px solid #f0efef;
+  background-color: #f0efef;
+  margin-top: 1rem;
+  margin-left: 6px;
+
+}
+
+#add::placeholder {
+  color: #bcbbbb; 
+  opacity: 1;  
+}
+
+#add:focus {
+  border-color: blue;
+  outline: none;
+  background-color:white;
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.date-input {
+  position: absolute;
+  top: 64%;
+  right: -2%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 6px; /* space between date input and button */
+  align-items: center;
+}
+
+.date-input input {
+  height: 28px;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+
+  color: #007bff; 
+  text-shadow: none; 
+}
+
+.date-input input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.date-input .submit-button {
+  padding: 4px 8px;         
+  font-size: 12px;          
+  height: 28px;              
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.date-input .submit-button img {
+  width: 20px;               
+  height: 20px;
+}
+
+
+.empty-list {
+  margin-top: 11rem;
+  text-align: center;
+}
+
+.empty-list .image {
+  background-image: url('/assets/empty_tasks.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 180px;
+  height: 150px;
+  margin: auto;
+}
+
+.empty-list .text1 {
+  color: black;
+  font-size: 16px;
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.empty-list .text2 {
+  color: #666;
+  display: block;
+  font-size: 12px;
+}

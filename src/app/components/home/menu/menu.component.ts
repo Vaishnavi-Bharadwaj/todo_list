@@ -98,8 +98,8 @@ export class MenuComponent {
 
   @Output() select=new EventEmitter();
   
-  onSelectCategory()
+  onSelectCategory(menu_id:string)
   {
-    this.select.emit(this.category.menu_id);
+    this.select.emit(menu_id);
   }
 }
