@@ -14,13 +14,13 @@
               <img [src]="'assets/icons/'+ menu.icon" [alt]="menu.name"/>
               <span>{{menu.name}}</span>
             </button>
-           }
+          }
 
-           @else {
-            <button [class.active]="isActive(menu.path)" (click)="onSelectCategory(menu.menu_id)"> 
+          @else {
+            <button [class.active]="selectedCategoryId === menu.menu_id" (click)="onSelectCategory(menu.menu_id)"> 
               <img [src]="'assets/icons/'+ menu.icon" [alt]="menu.name"/>
               <span>{{menu.name}}</span>
-              <div class="dropdown-wrapper">
+              <div class="dropdown-wrapper" (click)="$event.stopPropagation()">
                 <div class="dots-button" (click)="toggleDropdown(menu.menu_id); $event.stopPropagation()">...</div>
                 @if (openDropdownId === menu.menu_id) {
                   <ul class="dropdown-menu">
@@ -29,7 +29,7 @@
                 }
               </div>
             </button>
-           }
+          }
         </li>
       }
   

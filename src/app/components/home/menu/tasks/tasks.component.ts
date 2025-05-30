@@ -18,6 +18,11 @@ interface Task {
   isEditing?: boolean;
 }
 
+interface TaskMap {
+  [menu_id: string]: Task[];
+}
+
+
 @Component({
   selector: 'app-tasks',
   imports: [MenuComponent, FormsModule, DatePipe],
@@ -32,9 +37,9 @@ export class TasksComponent {
   showDate=false;
   preventBlur = false;
   showButton=false;
-  todo_tasks: Task[] = [];
   newTask: Partial<Task> = { title: '', dueDate: '' };  
   openDropdownId: string | null = null;
+  taskMap: TaskMap = {};
 
   constructor() {
     const menu_list=localStorage.getItem('menu_list');
@@ -45,6 +50,10 @@ export class TasksComponent {
     this.loadTasks();
   }
 
+  get todo_tasks(): Task[] {
+    return this.taskMap[this.categoryId] || [];
+  }
+
   onCloseMenu()
   {
     this.isCloseMenu=!this.isCloseMenu; //toggle
@@ -52,7 +61,9 @@ export class TasksComponent {
 
   onSelectCategory(menu_id:string)
   {
-    this.categoryId=menu_id;
+    this.categoryId = menu_id;
+    this.showInput = false;
+    this.newTask = { title: '', dueDate: '' };
   }
 
   get categoryName(): string {
@@ -81,7 +92,11 @@ export class TasksComponent {
       isPinned: false,
       isCompleted: false
     };
-    this.todo_tasks.push(task);
+    if (!this.taskMap[this.categoryId]) {
+      this.taskMap[this.categoryId] = [];
+    }
+
+    this.taskMap[this.categoryId].push(task);
     this.saveTasks();
     this.newTask = { title: '', dueDate: '' };
   }
@@ -97,12 +112,17 @@ export class TasksComponent {
       this.openDropdownId = null;
     }
   }
+
+  
   
   onDeleteTask(task_id:string)
   {
-    this.todo_tasks=this.todo_tasks.filter((task)=>task.id!==task_id)
+    this.taskMap[this.categoryId]=this.todo_tasks.filter((task)=>task.id!==task_id)
     this.saveTasks();
   }
+
+  
+
 
   pinTask(task: Task) {
     task.isPinned = true;
@@ -135,8 +155,7 @@ export class TasksComponent {
   }
 
   get activeTasks(): Task[] {
-    const active = this.todo_tasks.filter(t => !t.isCompleted);
-    return active.sort((a, b) => Number(b.isPinned) - Number(a.isPinned));
+    return this.todo_tasks.filter(t => !t.isCompleted).sort((a, b) => Number(b.isPinned) - Number(a.isPinned));
   }
 
   get completedTasks(): Task[] {
@@ -144,17 +163,17 @@ export class TasksComponent {
   }
 
   get pinnedTasks(): Task[] {
-    return this.todo_tasks.filter(t => t.isPinned)
+    return this.todo_tasks.filter(t => t.isPinned);
   }
 
   saveTasks() {
-    localStorage.setItem('todo_tasks', JSON.stringify(this.todo_tasks));
+    localStorage.setItem('task_map', JSON.stringify(this.taskMap));
   }
 
   loadTasks() {
-    const stored = localStorage.getItem('todo_tasks');
+    const stored = localStorage.getItem('task_map');
     if (stored) {
-      this.todo_tasks = JSON.parse(stored);
+      this.taskMap = JSON.parse(stored);
     }
   }
 

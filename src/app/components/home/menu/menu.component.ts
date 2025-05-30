@@ -15,6 +15,8 @@ export class MenuComponent {
   isAddingTask:boolean=false;
   isDropDown!:boolean;
   openDropdownId: string | null = null;
+  selectedCategoryId: string | null = null;
+
 
   originalMenuIds: Set<string> = new Set();
   constructor(private router:Router) {
@@ -73,6 +75,10 @@ export class MenuComponent {
   {
     this.menu_list=this.menu_list.filter((menu)=>menu.menu_id!==menu_id)
     this.saveMenu();
+    // Close dropdown if it's the deleted one
+    if (this.openDropdownId === menu_id) {
+      this.openDropdownId = null;
+    }
   }
 
   
@@ -80,12 +86,9 @@ export class MenuComponent {
     this.openDropdownId = this.openDropdownId === menu_id ? null : menu_id;
   }
 
-  @HostListener('document:click', ['$event'])
-  handleOutsideClick(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.dropdown-wrapper')) {
-      this.openDropdownId = null;
-    }
+  @HostListener('document:click')
+  handleOutsideClick() {
+    this.openDropdownId = null;
   }
 
   //Adding tasks to each catergory
@@ -100,6 +103,7 @@ export class MenuComponent {
   
   onSelectCategory(menu_id:string)
   {
+    this.selectedCategoryId = menu_id;
     this.select.emit(menu_id);
   }
 }
