@@ -15,24 +15,89 @@
             <button class="add-task-button" (click)="onToggleInput()">+ Add Task</button>
             @if(showInput)
             {
-                <div class="input-wrapper">
-                    <input type="text" placeholder="+ Add your tasks here" id="add" (focus)="showDate=true" (blur)="hideDatePicker()"/>
-                    @if(showDate) 
-                    {
-                        <div class="date-input" (mousedown)="preventBlur = true" (mouseup)="preventBlur = false">
-                            <input type="date" id="date-input" (blur)="hideDatePicker()"/>
-                            <button class="submit-button" type="submit"><img src="assets/submit.png"></button>
-                        </div>
-                    }
-                </div>
+                <form (ngSubmit)="onAdd()">
+                    <div class="input-wrapper">
+                        <input type="text" placeholder="+ Add your tasks here" id="add" name="title"
+                        required
+                        [(ngModel)]="newTask.title" (focus)="showDate=true" (blur)="hideDatePicker()"/>
+                        @if(showDate) 
+                        {
+                            <div class="date-input" (mousedown)="preventBlur = true" (mouseup)="preventBlur = false">
+                                <input type="date" id="date-input" name="dueDate"
+                                required 
+                                [(ngModel)]="newTask.dueDate"(blur)="hideDatePicker()"/>
+                                <button class="submit-button" type="submit"><img src="assets/submit.png"></button>
+                            </div>
+                        }
+                    </div>
+                </form>
             }
         </header>
 
-        <div class="empty-list">
-            <div class="image"></div>
-            <span class="text1">No tasks</span>
-            <span class="text2">Click the input to add</span>
-        </div>
+        @if(pinnedTasks.length>0)
+        {
+            <div class="pinned-section">
+                <h4>Pinned</h4>
+                @for (task of pinnedTasks; track task.id) {
+                <div class="task pinned">
+                    <input type="checkbox" checked (change)="unPinTask(task)" />
+                    <span>{{ task.title }} - {{ task.dueDate }}</span>
+                </div>
+                }
+            </div>
+        }
 
+        @if(activeTasks.length===0 && completedTasks.length===0 && pinnedTasks.length===0)
+        {
+            <div class="empty-list">
+                <div class="image"></div>
+                <span class="text1">No tasks</span>
+                <span class="text2">Click the input to add</span>
+            </div>
+        }
+        @else {
+            <div class="task-section">
+                @for(task of activeTasks; track task.id)
+                {
+                    <div class="task-row">
+                        <div class="task">
+                            <div class="left-content">
+                                <input type="checkbox" (change)="markComplete(task)"/>
+                                <span class="title">{{ task.title }}</span>
+                            </div>
+                            <span class="day">{{ task.dueDate |  date: 'MMM d'}}</span>
+                        </div>
+
+                        <div class="dropdown-wrapper">
+                            <div class="dots-button" (click)="toggleDropdown(task.id); $event.stopPropagation()">...</div>
+                            @if (openDropdownId === task.id) {
+                                <ul class="dropdown-menu">
+                                    <li class="delete" (click)="onDeleteTask(task.id); $event.stopPropagation()">Delete</li>
+                                    <li class="pin" (click)="pinTask(task); $event.stopPropagation()">Pin</li>
+                                </ul>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        @if(completedTasks.length>0)
+        {
+            <div class="completed-section">
+                <h4>Completed Tasks</h4>
+                <div class="task-row">
+                    @for (task of completedTasks; track task.id) {
+                    <div class="task completed">
+                        <div class="left-content">
+                            <input class="incomplete" type="checkbox" checked (change)="markIncomplete(task)" />
+                            <span class="title">{{ task.title }}</span>
+                        </div>
+                        <span class="day">{{ task.dueDate |  date: 'MMM d'}}</span>
+                    </div>
+                    }
+                </div>
+            </div>
+        }
     </div>
 </div>
