@@ -190,3 +190,111 @@ header .add-task-button:hover {
   display: block;
   font-size: 12px;
 }
+
+.task-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  gap: 12px;
+}
+
+
+.task {
+  padding: 8px;
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 8px;
+  margin-left: -1px;
+  flex:1;
+}
+
+.task:hover {
+  background-color: rgb(227, 226, 226);
+}
+
+.left-content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+input[type="checkbox"] {
+  position: relative;
+  top: 2px; 
+}
+
+.title {
+  margin: 0;
+  font-size: 14px;
+}
+
+.day {
+  color: blue;
+  font-size: 11px;
+}
+
+.task.completed {
+  background-color: #e0e0e0;
+  color: #666;
+  border: 1px solid #ccc;
+}
+
+.task.completed input[type="checkbox"] {
+  accent-color: grey; 
+}
+
+.task.completed .title {
+  color: #666;
+}
+
+.task.completed .day {
+  color: #888;
+}
+
+
+.dropdown-wrapper {
+  position: relative;
+}
+
+.dots-button {
+  padding: 4px 8px;
+  cursor: pointer;
+  color:rgb(162, 162, 162)
+  
+}
+
+.dropdown-menu {
+  position: fixed;
+  background: white;
+  border: 1px solid #ccc;
+  list-style: none;
+  z-index: 1100;
+  width: 100px;
+  margin-left: -60px;
+  border-radius: 4px;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.15);
+  padding:0;
+  max-height: 100px; 
+}
+
+.dropdown-menu li {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  margin:0;
+  white-space: nowrap;
+}
+
+.dropdown-menu .delete:hover {
+  background-color: #f6e4e4;
+  color:red
+}
+
+.dropdown-menu .pin:hover {
+  background-color: #ccc;
+  
+}
