@@ -298,3 +298,37 @@ input[type="checkbox"] {
   background-color: #ccc;
   
 }
+
+
+.pinned-section {
+  margin-bottom: 1rem;
+
+  h4 {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+
+  .task.pinned {
+    background-color: #fff8e1;
+    border-left: 4px solid #ffc107;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
+  }
+
+  .divider {
+    border: none;
+    border-top: 2px dashed #ccc;
+    margin-top: 1rem;
+  }
+}
+
+.task .title {
+  cursor: text;
+  outline: none;
+}
+
+.task .title:focus {
+  background-color: #f0f8ff;
+  border-radius: 4px;
+}

@@ -19,6 +19,8 @@ export class HomeComponent {
   showDate=false;
 
   preventBlur = false;
+  category_id: string | null = null;
+  
 
   hideDatePicker() { 
       if (!this.preventBlur) {
@@ -32,7 +34,6 @@ export class HomeComponent {
   }
 
   category_list:Category[]=[];
-  category_id!:string;
   constructor() {
     const menu_list=localStorage.getItem('menu_list');
     if(menu_list)
@@ -45,5 +46,9 @@ export class HomeComponent {
   onSelectCategory(menu_id:string)
   {
     this.category_id=menu_id;
+  }
+
+  trackByMenuId(index: number, item: Category) {
+    return item.menu_id;
   }
 }

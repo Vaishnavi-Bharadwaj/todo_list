@@ -4,7 +4,7 @@
         @for(c of category_list; track c.menu_id)
         {
             <div class="sidebar">
-                <app-menu [category]="c" (select)="onSelectCategory($event)"></app-menu>
+                    <app-menu [category]="c" (select)="onSelectCategory($event)"></app-menu>
             </div>
         }
     }
@@ -34,18 +34,33 @@
             }
         </header>
 
-        @if(pinnedTasks.length>0)
-        {
-            <div class="pinned-section">
-                <h4>Pinned</h4>
-                @for (task of pinnedTasks; track task.id) {
+        <!-- Pinned Section -->
+        @if (pinnedTasks.length > 0) {
+        <div class="pinned-section">
+            <h4>Pinned</h4>
+            @for(task of pinnedTasks; track task.id) {
+            <div class="task-row">
                 <div class="task pinned">
-                    <input type="checkbox" checked (change)="unPinTask(task)" />
-                    <span>{{ task.title }} - {{ task.dueDate }}</span>
+                <div class="left-content">
+                    <input type="checkbox" (change)="markComplete(task)" />
+                    <span class="title">{{ task.title }}</span>
                 </div>
+                <span class="day">{{ task.dueDate | date: 'MMM d' }}</span>
+                </div>
+                <div class="dropdown-wrapper">
+                <div class="dots-button" (click)="toggleDropdown(task.id); $event.stopPropagation()">...</div>
+                @if (openDropdownId === task.id) {
+                    <ul class="dropdown-menu">
+                    <li class="delete" (click)="onDeleteTask(task.id); $event.stopPropagation()">Delete</li>
+                    <li class="pin" (click)="unPinTask(task); $event.stopPropagation()">Unpin</li>
+                    </ul>
                 }
+                </div>
             </div>
+            }
+        </div>
         }
+
 
         @if(activeTasks.length===0 && completedTasks.length===0 && pinnedTasks.length===0)
         {
@@ -63,7 +78,13 @@
                         <div class="task">
                             <div class="left-content">
                                 <input type="checkbox" (change)="markComplete(task)"/>
-                                <span class="title">{{ task.title }}</span>
+                                <span class="title"
+                                    contenteditable="true"
+                                    [textContent]="task.title"
+                                    (blur)="onEditTask(task, $event)"
+                                    (keydown)="onKeydown(task, $event)"
+                                    >
+                                </span>
                             </div>
                             <span class="day">{{ task.dueDate |  date: 'MMM d'}}</span>
                         </div>

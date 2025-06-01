@@ -31,7 +31,7 @@ interface TaskMap {
 })
 export class TasksComponent {
   isCloseMenu:boolean=false;
-  @Input() categoryId!: string;
+  @Input() categoryId!: string;;
   category_list:Category[]=[];
   showInput: boolean = false;
   showDate=false;
@@ -46,6 +46,10 @@ export class TasksComponent {
     if(menu_list)
     {
       this.category_list=JSON.parse(menu_list) as Category[];
+      if(this.category_list.length>0)
+      {
+        this.categoryId=this.category_list[0].menu_id;
+      }
     }
     this.loadTasks();
   }
@@ -113,16 +117,11 @@ export class TasksComponent {
     }
   }
 
-  
-  
   onDeleteTask(task_id:string)
   {
     this.taskMap[this.categoryId]=this.todo_tasks.filter((task)=>task.id!==task_id)
     this.saveTasks();
   }
-
-  
-
 
   pinTask(task: Task) {
     task.isPinned = true;
@@ -139,10 +138,23 @@ export class TasksComponent {
   }
 
   onEditTask(task: Task, event: any) {
-    task.title = event.target.innerText.trim();
-    task.isEditing = false;
-    this.saveTasks();
+    const updatedText = event.target.innerText.trim();
+    if (updatedText) {
+      task.title = updatedText;
+      this.saveTasks();
+    } else {
+      event.target.innerText = task.title;
+    }
   }
+
+  onKeydown(task: Task, event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.onEditTask(task, event);
+      (event.target as HTMLElement).blur();
+      event.preventDefault();
+    }
+  }
+
 
   markComplete(task: Task) {
     task.isCompleted = true;
@@ -155,7 +167,9 @@ export class TasksComponent {
   }
 
   get activeTasks(): Task[] {
-    return this.todo_tasks.filter(t => !t.isCompleted).sort((a, b) => Number(b.isPinned) - Number(a.isPinned));
+    // return this.todo_tasks.filter(t => !t.isCompleted).sort((a, b) => Number(b.isPinned) - Number(a.isPinned));
+    return this.todo_tasks.filter(t => !t.isCompleted && !t.isPinned);
+    
   }
 
   get completedTasks(): Task[] {
@@ -163,7 +177,7 @@ export class TasksComponent {
   }
 
   get pinnedTasks(): Task[] {
-    return this.todo_tasks.filter(t => t.isPinned);
+    return this.todo_tasks.filter(t => t.isPinned && !t.isCompleted);
   }
 
   saveTasks() {
@@ -176,7 +190,4 @@ export class TasksComponent {
       this.taskMap = JSON.parse(stored);
     }
   }
-
-
-
 }

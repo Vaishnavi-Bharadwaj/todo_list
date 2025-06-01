@@ -20,11 +20,14 @@ export class MenuComponent {
 
   originalMenuIds: Set<string> = new Set();
   constructor(private router:Router) {
-    const menu_list=localStorage.getItem('menu_list');
-    if(menu_list)
-    {
-      this.menu_list=JSON.parse(menu_list);
+    const savedMenu = localStorage.getItem('menu_list');
+    if (savedMenu) {
+      this.menu_list = JSON.parse(savedMenu);
     }
+
+    else {
+    this.menu_list = []; // Initialize to empty list if nothing in storage
+  }
 
     for(const menu of DUMMY_MENU_LIST)
     {
