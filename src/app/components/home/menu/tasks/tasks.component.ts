@@ -121,6 +121,9 @@ export class TasksComponent {
   {
     this.taskMap[this.categoryId]=this.todo_tasks.filter((task)=>task.id!==task_id)
     this.saveTasks();
+    if (this.openDropdownId === task_id) {
+      this.openDropdownId = null;
+    }
   }
 
   pinTask(task: Task) {
@@ -155,7 +158,6 @@ export class TasksComponent {
     }
   }
 
-
   markComplete(task: Task) {
     task.isCompleted = true;
     this.saveTasks();
@@ -167,9 +169,7 @@ export class TasksComponent {
   }
 
   get activeTasks(): Task[] {
-    // return this.todo_tasks.filter(t => !t.isCompleted).sort((a, b) => Number(b.isPinned) - Number(a.isPinned));
     return this.todo_tasks.filter(t => !t.isCompleted && !t.isPinned);
-    
   }
 
   get completedTasks(): Task[] {

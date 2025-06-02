@@ -36,31 +36,30 @@
 
         <!-- Pinned Section -->
         @if (pinnedTasks.length > 0) {
-        <div class="pinned-section">
-            <h4>Pinned</h4>
-            @for(task of pinnedTasks; track task.id) {
-            <div class="task-row">
-                <div class="task pinned">
-                <div class="left-content">
-                    <input type="checkbox" (change)="markComplete(task)" />
-                    <span class="title">{{ task.title }}</span>
+            <div class="pinned-section">
+                <h4>Pinned</h4>
+                @for(task of pinnedTasks; track task.id) {
+                <div class="task-row">
+                    <div class="task pinned">
+                        <div class="left-content">
+                            <input type="checkbox" (change)="markComplete(task)" />
+                            <span class="title">{{ task.title }}</span>
+                        </div>
+                        <span class="day">{{ task.dueDate | date: 'MMM d' }}</span>
+                    </div>
+                    <div class="dropdown-wrapper">
+                        <div class="dots-button" (click)="toggleDropdown(task.id); $event.stopPropagation()">...</div>
+                        @if (openDropdownId === task.id) {
+                            <ul class="dropdown-menu">
+                                <li class="delete" (click)="onDeleteTask(task.id); $event.stopPropagation()">Delete</li>
+                                <li class="pin" (click)="unPinTask(task); $event.stopPropagation()">Unpin</li>
+                            </ul>
+                        }
+                    </div>
                 </div>
-                <span class="day">{{ task.dueDate | date: 'MMM d' }}</span>
-                </div>
-                <div class="dropdown-wrapper">
-                <div class="dots-button" (click)="toggleDropdown(task.id); $event.stopPropagation()">...</div>
-                @if (openDropdownId === task.id) {
-                    <ul class="dropdown-menu">
-                    <li class="delete" (click)="onDeleteTask(task.id); $event.stopPropagation()">Delete</li>
-                    <li class="pin" (click)="unPinTask(task); $event.stopPropagation()">Unpin</li>
-                    </ul>
                 }
-                </div>
             </div>
-            }
-        </div>
         }
-
 
         @if(activeTasks.length===0 && completedTasks.length===0 && pinnedTasks.length===0)
         {

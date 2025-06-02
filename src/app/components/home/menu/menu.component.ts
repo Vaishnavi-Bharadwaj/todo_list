@@ -26,8 +26,8 @@ export class MenuComponent {
     }
 
     else {
-    this.menu_list = []; // Initialize to empty list if nothing in storage
-  }
+      this.menu_list = []; // Initialize to empty list if nothing in storage
+    }
 
     for(const menu of DUMMY_MENU_LIST)
     {
@@ -60,13 +60,13 @@ export class MenuComponent {
       menu_id: ('m'+(this.menu_list.length + 1)).toString(),
       name: data.name,
       icon: 'menu-icon1.png',
-      path: '/' + data.name.toLowerCase().replace(/\s+/g, '-'),
-      
+      path: '/category',
     };
     this.isNew= true;
     this.menu_list.push(newItem);
     this.saveMenu();
     this.isAddingTask = false;
+    this.router.navigate(['/home'])
   }
 
   saveMenu()
@@ -78,10 +78,20 @@ export class MenuComponent {
   {
     this.menu_list=this.menu_list.filter((menu)=>menu.menu_id!==menu_id)
     this.saveMenu();
+
+    // Remove corresponding tasks from taskMap in localStorage
+    const taskMapStr = localStorage.getItem('task_map');
+    if (taskMapStr) {
+      const taskMap: { [key: string]: any } = JSON.parse(taskMapStr);
+      delete taskMap[menu_id]; // Remove tasks of deleted category
+      localStorage.setItem('task_map', JSON.stringify(taskMap));
+    }
+
     // Close dropdown if it's the deleted one
     if (this.openDropdownId === menu_id) {
       this.openDropdownId = null;
     }
+    this.router.navigate(['/home'])
   }
 
   
@@ -108,5 +118,6 @@ export class MenuComponent {
   {
     this.selectedCategoryId = menu_id;
     this.select.emit(menu_id);
+    this.router.navigate(['/category', menu_id]);
   }
 }
