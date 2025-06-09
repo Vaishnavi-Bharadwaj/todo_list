@@ -31,7 +31,7 @@ interface TaskMap {
 })
 export class TasksComponent {
   isCloseMenu:boolean=false;
-  @Input() categoryId!: string;;
+  @Input() categoryId!: string;
   category_list:Category[]=[];
   showInput: boolean = false;
   showDate=false;

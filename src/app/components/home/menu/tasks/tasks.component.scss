@@ -1,21 +1,19 @@
 .main-container {
   display: flex;
   width: 100%;
-  height: 100vh; /* Set the fixed height */
+  height: 100vh; 
   transition: all 0.3s ease;
   position: relative;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Sidebar appears over content when open */
 .sidebar {
   position: fixed;
   top: 0;
   left: 0;
   width: 240px;
-  height: 100vh; /* full viewport height */
-  background: white; /* add bg if needed */
-  // box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  height: 100vh; 
+  background: white; 
   border-right: 1px solid #f2f0f0;
   z-index: 1000;
   transition: transform 0.3s ease;
@@ -23,25 +21,22 @@
 }
 
 
-/* When menu closed, slide sidebar out of view */
 .menu-closed .sidebar {
   transform: translateX(-100%);
 }
 
 
-/* Content section */
+
 .tasks_list {
   flex: 1;
   padding: 2rem;
   margin-left: 0;
-  // height: calc(100vh - 60px); /* Match sidebar and container */
   box-sizing: border-box;
   overflow-y: auto;
   transition: margin-left 0.3s ease;
   
 }
 
-/* When menu is open, push content */
 .menu-open .tasks_list {
   margin-left: 240px;
 }
@@ -67,7 +62,7 @@ header span {
 }
 
 header .add-task-button {
-  background-color: rgb(198, 198, 198); /* Green */
+  background-color: rgb(198, 198, 198); 
   color: black;
   padding: 10px 16px;
   font-size: 14.5px;
@@ -124,7 +119,7 @@ header .add-task-button:hover {
   right: -2%;
   transform: translateY(-50%);
   display: flex;
-  gap: 6px; /* space between date input and button */
+  gap: 6px;
   align-items: center;
 }
 

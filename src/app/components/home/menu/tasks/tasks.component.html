@@ -25,7 +25,7 @@
                             <div class="date-input" (mousedown)="preventBlur = true" (mouseup)="preventBlur = false">
                                 <input type="date" id="date-input" name="dueDate"
                                 required 
-                                [(ngModel)]="newTask.dueDate"(blur)="hideDatePicker()"/>
+                                [(ngModel)]="newTask.dueDate" (blur)="hideDatePicker()"/>
                                 <button class="submit-button" type="submit"><img src="assets/submit.png"></button>
                             </div>
                         }

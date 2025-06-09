@@ -1,47 +1,40 @@
 .main-container {
   display: flex;
   width: 100%;
-  height: 90vh; /* Set the fixed height */
+  height: 90vh; 
   transition: all 0.3s ease;
   position: relative;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Sidebar appears over content when open */
 .sidebar {
   position: fixed;
   top: 0;
   left: 0;
   width: 240px;
-  height: 100vh; /* full viewport height */
-  background: white; /* add bg if needed */
-  // box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  height: 100vh; 
+  background: white; 
   border-right: 1px solid #f2f0f0;
   z-index: 1000;
   transition: transform 0.3s ease;
   overflow-y: auto;
 }
 
-
-/* When menu closed, slide sidebar out of view */
 .menu-closed .sidebar {
   transform: translateX(-100%);
 }
 
-
-/* Content section */
 .today_list {
   flex: 1;
   padding: 2rem;
   margin-left: 0;
-  height: 90vh; /* Match sidebar and container */
+  height: 90vh; 
   box-sizing: border-box;
   overflow-y: auto;
   transition: margin-left 0.3s ease;
   
 }
 
-/* When menu is open, push content */
 .menu-open .today_list {
   margin-left: 240px;
 }
@@ -101,6 +94,10 @@ header span {
   top: 64%;
   right: -2%;
   transform: translateY(-50%);
+
+  display: flex;
+  gap: 6px;
+  align-items: center;
 }
 
 .date-input input {
@@ -110,13 +107,31 @@ header span {
   border-radius: 4px;
   cursor: pointer;
 
-  color: #007bff; /* Change this to your desired text color */
-  text-shadow: none; /* Remove shadow if previously used to hide text */
+  color: #007bff; 
+  text-shadow: none; 
 }
 
 .date-input input:focus {
   border-color: #007bff;
   outline: none;
+}
+
+.date-input .submit-button {
+  padding: 4px 8px;         
+  font-size: 12px;          
+  height: 28px;              
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.date-input .submit-button img {
+  width: 20px;               
+  height: 20px;
 }
 
 .empty-list {
@@ -145,4 +160,50 @@ header span {
   color: #666;
   display: block;
   font-size: 12px;
+}
+
+.task-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  gap: 12px;
+}
+
+
+.task {
+  padding: 8px;
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 8px;
+  margin-left: -1px;
+  flex:1;
+}
+
+.task:hover {
+  background-color: rgb(227, 226, 226);
+}
+
+.left-content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+input[type="checkbox"] {
+  position: relative;
+  top: 2px; 
+}
+
+.title {
+  margin: 0;
+  font-size: 14px;
+}
+
+.day {
+  color: blue;
+  font-size: 11px;
 }
