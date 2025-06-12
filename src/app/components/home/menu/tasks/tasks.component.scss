@@ -268,12 +268,12 @@ input[type="checkbox"] {
   border: 1px solid #ccc;
   list-style: none;
   z-index: 1100;
-  width: 100px;
-  margin-left: -60px;
+  width: 140px;
+  margin-left: -80px;
   border-radius: 4px;
   box-shadow: 0px 2px 5px rgba(0,0,0,0.15);
   padding:0;
-  max-height: 100px; 
+  height: 210px; 
 }
 
 .dropdown-menu li {
@@ -291,9 +291,23 @@ input[type="checkbox"] {
 
 .dropdown-menu .pin:hover {
   background-color: #ccc;
-  
 }
 
+.dropdown-menu .high-priority:hover, .medium-priority:hover, .low-priority:hover, .no-priority:hover {
+  background-color: #ccc;
+}
+
+.dropdown-menu .high-priority, .medium-priority, .low-priority, .no-priority {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dropdown-menu .high-priority img, .medium-priority img, .low-priority img, .no-priority img{
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
 
 .pinned-section {
   margin-bottom: 1rem;

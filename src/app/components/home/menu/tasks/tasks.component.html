@@ -40,9 +40,9 @@
                 <h4>Pinned</h4>
                 @for(task of pinnedTasks; track task.id) {
                 <div class="task-row">
-                    <div class="task pinned">
-                        <div class="left-content">
-                            <input type="checkbox" (change)="markComplete(task)" />
+                    <div class="task pinned" [ngStyle]="{'color': task.priorityColor}">
+                        <div class="left-content"  >
+                            <input type="checkbox" (change)="markComplete(task)"/>
                             <span class="title">{{ task.title }}</span>
                         </div>
                         <span class="day">{{ task.dueDate | date: 'MMM d' }}</span>
@@ -53,6 +53,10 @@
                             <ul class="dropdown-menu">
                                 <li class="delete" (click)="onDeleteTask(task.id); $event.stopPropagation()">Delete</li>
                                 <li class="pin" (click)="unPinTask(task); $event.stopPropagation()">Unpin</li>
+                                <li class="high-priority" (click)="highPriorityTask(task)">High Priority<img src="assets/high.png" /></li>
+                                <li class="medium-priority" (click)="mediumPriorityTask(task)">Medium Priority<img src="assets/medium.png" /></li>
+                                <li class="low-priority" (click)="lowPriorityTask(task)">Low Priority<img src="assets/low.png" /></li>
+                                <li class="no-priority" (click)="noPriorityTask(task)">No Priority<img src="assets/no-priority.png" /></li>
                             </ul>
                         }
                     </div>
@@ -74,7 +78,7 @@
                 @for(task of activeTasks; track task.id)
                 {
                     <div class="task-row">
-                        <div class="task">
+                        <div class="task" [ngStyle]="{'color': task.priorityColor}">
                             <div class="left-content">
                                 <input type="checkbox" (change)="markComplete(task)"/>
                                 <span class="title"
@@ -94,6 +98,10 @@
                                 <ul class="dropdown-menu">
                                     <li class="delete" (click)="onDeleteTask(task.id); $event.stopPropagation()">Delete</li>
                                     <li class="pin" (click)="pinTask(task); $event.stopPropagation()">Pin</li>
+                                    <li class="high-priority" (click)="highPriorityTask(task)">High Priority<img src="assets/high.png" /></li>
+                                    <li class="medium-priority" (click)="mediumPriorityTask(task)">Medium Priority<img src="assets/medium.png" /></li>
+                                    <li class="low-priority" (click)="lowPriorityTask(task)">Low Priority<img src="assets/low.png" /></li>
+                                    <li class="no-priority" (click)="noPriorityTask(task)">No Priority<img src="assets/no-priority.png" /></li>
                                 </ul>
                             }
                         </div>

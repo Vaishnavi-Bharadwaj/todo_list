@@ -2,6 +2,7 @@ import { Component, HostListener, Input } from '@angular/core';
 import { MenuComponent } from '../menu.component';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 interface Category {
   menu_id: string;
   name: string;
@@ -16,6 +17,7 @@ interface Task {
   isPinned: boolean;
   isCompleted: boolean;
   isEditing?: boolean;
+  priorityColor?:string
 }
 
 interface TaskMap {
@@ -25,7 +27,7 @@ interface TaskMap {
 
 @Component({
   selector: 'app-tasks',
-  imports: [MenuComponent, FormsModule, DatePipe],
+  imports: [MenuComponent, FormsModule, DatePipe, CommonModule],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.scss'
 })
@@ -134,6 +136,22 @@ export class TasksComponent {
   unPinTask(task: Task) {
     task.isPinned = false;
     this.saveTasks();
+  }
+
+  highPriorityTask(task: Task) {
+    task.priorityColor= 'red';
+  }
+
+  mediumPriorityTask(task: Task) {
+    task.priorityColor='yellow';
+  }
+
+  lowPriorityTask(task: Task) {
+    task.priorityColor= 'blue';
+  }
+
+  noPriorityTask(task: Task) {
+    task.priorityColor='black';
   }
 
   editTask(task: Task) {
