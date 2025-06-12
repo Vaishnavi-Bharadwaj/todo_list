@@ -10,7 +10,7 @@
     }
     
     <div class="today_list">
-        <header>
+        <!-- <header>
             <button (click)="onCloseMenu()">☰</button>
             <span>Today</span>
             <div class="input-wrapper">
@@ -23,6 +23,27 @@
                     </div>
                 }
             </div>
+        </header> -->
+
+        <header>
+            <button (click)="onCloseMenu()">☰</button>
+            <span>Today</span>
+            
+                <form (ngSubmit)="onAdd()">
+                    <div class="input-wrapper">
+                        <input type="text" placeholder="+ Add task to &quot;Inbox&quot;" id="add" name="title" required
+                        [(ngModel)]="todayNewtask.title" (focus)="showDate=true" (blur)="hideDatePicker()"/>
+                        @if(showDate) 
+                        {
+                            <div class="date-input" (mousedown)="preventBlur = true" (mouseup)="preventBlur = false">
+                                <input type="date" id="date-input" name="dueDate" required 
+                                [(ngModel)]="todayNewtask.dueDate" (blur)="hideDatePicker()"/>
+                                <button class="submit-button" type="submit"><img src="assets/submit.png"></button>
+                            </div>
+                        }
+                    </div>
+                </form>
+            
         </header>
 
         @if(todayTasks.length === 0)

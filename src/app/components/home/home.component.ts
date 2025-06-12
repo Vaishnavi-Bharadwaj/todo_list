@@ -33,9 +33,12 @@ export class HomeComponent {
   isCloseMenu:boolean=false;
   showDate=false;
   preventBlur = false;
-  category_id: string | null = null;
+  // category_id: string | null = null;
+  category_id: string;
   todayTasks: Task[] = [];
-
+  todayAddedTasks: Task[] = [];
+  todayNewtask: Partial<Task> = { title: '', dueDate: '' };  
+  todayTaskMap: TaskMap = {};
 
   hideDatePicker() { 
     if (!this.preventBlur) {
@@ -58,7 +61,7 @@ export class HomeComponent {
       this.category_list = DUMMY_MENU_LIST;
       localStorage.setItem('menu_list', JSON.stringify(DUMMY_MENU_LIST)); // Save defaults back
     }
-
+    this.category_id=this.category_list[0].menu_id;
     this.loadTodayTasks();
   }
 
@@ -72,14 +75,47 @@ export class HomeComponent {
       Object.values(taskMap).forEach(taskList => {
         allTasks = [...allTasks, ...taskList];
       });
-
       this.todayTasks = allTasks.filter(task => task.dueDate === today && !task.isCompleted);
     }
+
+    const storedToday = localStorage.getItem('today_task_map');
+    if (storedToday) {
+      const todayTaskMap: TaskMap = JSON.parse(storedToday);
+      let allTodayTasks: Task[] = [];
+      Object.values(todayTaskMap).forEach(taskList => {
+        allTodayTasks = [...allTodayTasks, ...taskList];
+      });
+      this.todayAddedTasks = allTodayTasks;
+    }
+
+    this.todayTasks = [...this.todayTasks, ...this.todayAddedTasks];
   }
-  
+
   onSelectCategory(menu_id:string)
   {
     this.category_id=menu_id;
+  }
+  
+  onAdd() {
+    if (!this.todayNewtask.title || !this.todayNewtask.dueDate) return;
+    const task: Task = {
+      id: Date.now().toString(),
+      title: this.todayNewtask.title!,
+      dueDate: this.todayNewtask.dueDate!,
+      isPinned: false,
+      isCompleted: false
+    };
+    if (!this.todayTaskMap[this.category_id]) {
+      this.todayTaskMap[this.category_id] = [];
+    }
+
+    this.todayTaskMap[this.category_id].push(task);
+    this.saveTasks();
+    this.todayNewtask = { title: '', dueDate: '' };
+  }
+
+  saveTasks() {
+    localStorage.setItem('today_task_map', JSON.stringify(this.todayTaskMap));
   }
 
 }
