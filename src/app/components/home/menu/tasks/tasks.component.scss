@@ -111,9 +111,17 @@ header .add-task-button:hover {
 .input-wrapper {
   position: relative;
   width: 100%;
+  
 }
 
-.date-input {
+.input-subtask-wrapper {
+  position: relative;
+  width: 90%;
+  margin-left: 24px;
+  margin-bottom: 20px;
+}
+
+.date-input, .subtask-date-input {
   position: absolute;
   top: 64%;
   right: -2%;
@@ -123,7 +131,7 @@ header .add-task-button:hover {
   align-items: center;
 }
 
-.date-input input {
+.date-input input, .subtask-date-input  input {
   height: 28px;
   font-size: 0.9rem;
   border: 1px solid #ccc;
@@ -134,12 +142,12 @@ header .add-task-button:hover {
   text-shadow: none; 
 }
 
-.date-input input:focus {
+.date-input input:focus, .subtask-date-input:focus {
   border-color: #007bff;
   outline: none;
 }
 
-.date-input .submit-button {
+.date-input .submit-button, .subtask-date-input .submit-button {
   padding: 4px 8px;         
   font-size: 12px;          
   height: 28px;              
@@ -152,7 +160,7 @@ header .add-task-button:hover {
   justify-content: center;
 }
 
-.date-input .submit-button img {
+.date-input .submit-button img, .subtask-date-input  .submit-button img{
   width: 20px;               
   height: 20px;
 }
@@ -195,8 +203,17 @@ header .add-task-button:hover {
   gap: 12px;
 }
 
+ .subtask-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 30px;
+  margin-bottom: 10px;
+  gap: 12px;
+}
 
-.task {
+
+.task, .subtask {
   padding: 8px;
   border: 1px solid #ddd;
   display: flex;
@@ -207,7 +224,7 @@ header .add-task-button:hover {
   flex:1;
 }
 
-.task:hover {
+.task:hover, .subtask:hover {
   background-color: rgb(227, 226, 226);
 }
 
@@ -273,7 +290,11 @@ input[type="checkbox"] {
   border-radius: 4px;
   box-shadow: 0px 2px 5px rgba(0,0,0,0.15);
   padding:0;
-  height: 210px; 
+  height: 243px; 
+}
+
+.subtask-section .dropdown-menu {
+  height: 173px;
 }
 
 .dropdown-menu li {
@@ -293,7 +314,7 @@ input[type="checkbox"] {
   background-color: #ccc;
 }
 
-.dropdown-menu .high-priority:hover, .medium-priority:hover, .low-priority:hover, .no-priority:hover {
+.dropdown-menu .high-priority:hover, .medium-priority:hover, .low-priority:hover, .no-priority:hover, .subtask-add:hover {
   background-color: #ccc;
 }
 

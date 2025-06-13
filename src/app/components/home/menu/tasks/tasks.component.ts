@@ -17,7 +17,19 @@ interface Task {
   isPinned: boolean;
   isCompleted: boolean;
   isEditing?: boolean;
-  priorityColor?:string
+  priorityColor?: string
+  subTasks?: SubTask[];
+  newSubtaskTitle?: string;
+  newSubtaskDate?:string;
+  showSubtaskInput?: boolean;
+}
+
+interface SubTask {
+  id: string;
+  title: string;
+  dueDate: string;
+  isCompleted: boolean;
+  priorityColor?: string
 }
 
 interface TaskMap {
@@ -40,6 +52,7 @@ export class TasksComponent {
   preventBlur = false;
   showButton=false;
   newTask: Partial<Task> = { title: '', dueDate: '' };  
+  // newSubtask: Partial<SubTask> = { title: '', dueDate: '' };  
   openDropdownId: string | null = null;
   taskMap: TaskMap = {};
 
@@ -105,6 +118,30 @@ export class TasksComponent {
     this.taskMap[this.categoryId].push(task);
     this.saveTasks();
     this.newTask = { title: '', dueDate: '' };
+  }
+
+  showSubtaskInput(task: Task) {
+    task.showSubtaskInput = true;
+  }
+
+  addSubtask(task: Task) {
+    if(!task.subTasks)
+      task.subTasks=[];
+    if(!task.newSubtaskTitle || task.newSubtaskTitle.trim()==='')
+      return;
+    if(!task.newSubtaskDate || task.newSubtaskDate.trim()==='')
+      return;
+    const subtask: SubTask = {
+      id: Date.now().toString(),
+      title: task.newSubtaskTitle.trim(),
+      dueDate: task.newSubtaskDate,
+      isCompleted: false
+    }
+    task.subTasks.push(subtask);
+    task.newSubtaskTitle='';
+    task.newSubtaskDate='';
+    this.saveTasks();
+    task.showSubtaskInput=false;
   }
 
   toggleDropdown(task_id: string) {
@@ -176,13 +213,24 @@ export class TasksComponent {
     }
   }
 
-  markComplete(task: Task) {
-    task.isCompleted = true;
+  markComplete(item: Task | SubTask) {
+    // item.isCompleted = true;
+    // this.saveTasks();
+    if ('subTasks' in item) { // It's a main task
+      item.isCompleted = true;
+      if (item.subTasks && item.subTasks.length > 0) {
+        item.subTasks.forEach(subtask => subtask.isCompleted = true);
+      }
+    } else { // It's a subtask
+      item.isCompleted = true;
+    }
     this.saveTasks();
+
   }
 
-  markIncomplete(task: Task) {
-    task.isCompleted = false;
+
+  markIncomplete(item: { isCompleted: boolean}) {
+    item.isCompleted = false;
     this.saveTasks();
   }
 
