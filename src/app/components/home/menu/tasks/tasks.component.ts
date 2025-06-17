@@ -36,7 +36,6 @@ interface TaskMap {
   [menu_id: string]: Task[];
 }
 
-
 @Component({
   selector: 'app-tasks',
   imports: [MenuComponent, FormsModule, DatePipe, CommonModule],
@@ -51,8 +50,7 @@ export class TasksComponent {
   showDate=false;
   preventBlur = false;
   showButton=false;
-  newTask: Partial<Task> = { title: '', dueDate: '' };  
-  // newSubtask: Partial<SubTask> = { title: '', dueDate: '' };  
+  newTask: Partial<Task> = { title: '', dueDate: '' };    
   openDropdownId: string | null = null;
   taskMap: TaskMap = {};
 
@@ -214,32 +212,64 @@ export class TasksComponent {
   }
 
   markComplete(item: Task | SubTask) {
-    // item.isCompleted = true;
-    // this.saveTasks();
-    if ('subTasks' in item) { // It's a main task
-      item.isCompleted = true;
-      if (item.subTasks && item.subTasks.length > 0) {
+    if ('subTasks' in item) { // main task
+    item.isCompleted = true;
+    if (item.subTasks && item.subTasks.length > 0) {
         item.subTasks.forEach(subtask => subtask.isCompleted = true);
       }
-    } else { // It's a subtask
+    } else { // subtask
       item.isCompleted = true;
+      for (const task of this.todo_tasks) {
+        if (task.subTasks?.some(sub => sub.id === item.id)) {
+          task.isCompleted = false; 
+          break;
+        }
+      }
     }
+
+    this.taskMap[this.categoryId] = [...this.todo_tasks]; // Force refresh
     this.saveTasks();
 
   }
 
-
-  markIncomplete(item: { isCompleted: boolean}) {
+  markIncomplete(item: Task | SubTask, parentTask?: Task) {
     item.isCompleted = false;
+
+    if ('subTasks' in item) { 
+      // Main task unchecked
+      // Do not uncheck subtasks when the main task is unchecked
+    } else { 
+      // Subtask unchecked
+      // Find the parent task in case parentTask is not passed
+      if (!parentTask) {
+        for (const task of this.todo_tasks) {
+          if (task.subTasks?.some(sub => sub.id === item.id)) {
+            parentTask = task;
+            break;
+          }
+        }
+      }
+
+      // Uncheck the parent if any subtask is incomplete
+      if (parentTask && parentTask.isCompleted) {
+        parentTask.isCompleted = false;
+      }
+    }
+
+    this.taskMap[this.categoryId] = [...this.todo_tasks]; 
     this.saveTasks();
   }
+
+
 
   get activeTasks(): Task[] {
     return this.todo_tasks.filter(t => !t.isCompleted && !t.isPinned);
   }
 
   get completedTasks(): Task[] {
-    return this.todo_tasks.filter(t => t.isCompleted);
+    return this.todo_tasks.filter(task => 
+      task.isCompleted || (task.subTasks && task.subTasks.length > 0 && task.subTasks.some(sub => sub.isCompleted))
+    );
   }
 
   get pinnedTasks(): Task[] {
