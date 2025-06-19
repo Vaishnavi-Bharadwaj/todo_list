@@ -207,3 +207,42 @@ input[type="checkbox"] {
   color: blue;
   font-size: 11px;
 }
+
+
+.dropdown-wrapper {
+  position: relative;
+}
+
+.dots-button {
+  padding: 4px 8px;
+  cursor: pointer;
+  color:rgb(162, 162, 162)
+  
+}
+
+.dropdown-menu {
+  position: fixed;
+  background: white;
+  border: 1px solid #ccc;
+  list-style: none;
+  z-index: 1100;
+  width: 140px;
+  margin-left: -80px;
+  border-radius: 4px;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.15);
+  padding:0;
+  height: 34px; 
+}
+
+.dropdown-menu li {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  margin:0;
+  white-space: nowrap;
+}
+
+.dropdown-menu .delete:hover {
+  background-color: #f6e4e4;
+  color:red
+}

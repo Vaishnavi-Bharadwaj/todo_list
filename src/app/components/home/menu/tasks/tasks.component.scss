@@ -249,24 +249,43 @@ input[type="checkbox"] {
   font-size: 11px;
 }
 
-.task.completed {
+.task.completed, .subtask.completed {
   background-color: #e0e0e0;
   color: #666;
   border: 1px solid #ccc;
+  width: 90%;
 }
 
-.task.completed input[type="checkbox"] {
+
+.task.completed input[type="checkbox"], .subtask.completed input[type="checkbox"]{
   accent-color: grey; 
 }
 
-.task.completed .title {
+.task.completed .title, .subtask.completed .title{
   color: #666;
 }
 
-.task.completed .day {
+.task.completed .day,  .subtask.completed .day{
   color: #888;
 }
 
+.completed-section .task-row {
+    display: flex;
+    flex-direction: column; 
+    gap: 15px; 
+}
+
+.completed-section .subtask-row {
+    display: flex;
+    flex-direction: column; 
+    margin-left: 30px; 
+    gap: 10px; 
+}
+
+.completed-section .task.completed, 
+.completed-section .subtask.completed {
+    width: 100%; 
+}
 
 .dropdown-wrapper {
   position: relative;

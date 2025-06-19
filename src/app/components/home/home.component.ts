@@ -17,6 +17,17 @@ interface Task {
   dueDate: string;
   isPinned: boolean;
   isCompleted: boolean;
+  subTasks?: SubTask[];
+  priorityColor?: string;
+}
+
+interface SubTask {
+  id: string;
+  title: string;
+  dueDate: string;
+  isPinned: boolean;
+  isCompleted: boolean;
+  priorityColor?: string;
 }
 
 interface TaskMap {
@@ -33,7 +44,7 @@ export class HomeComponent {
   isCloseMenu:boolean=false;
   showDate=false;
   preventBlur = false;
-  // category_id: string | null = null;
+  openDropdownId: string | null = null;
   category_id: string;
   todayTasks: Task[] = [];
   todayAddedTasks: Task[] = [];
@@ -62,6 +73,12 @@ export class HomeComponent {
       localStorage.setItem('menu_list', JSON.stringify(DUMMY_MENU_LIST)); // Save defaults back
     }
     this.category_id=this.category_list[0].menu_id;
+    
+    const storedTodayMap = localStorage.getItem('today_task_map');
+    if (storedTodayMap) {
+      this.todayTaskMap = JSON.parse(storedTodayMap);
+    }
+
     this.loadTodayTasks();
   }
 
@@ -76,6 +93,19 @@ export class HomeComponent {
         allTasks = [...allTasks, ...taskList];
       });
       this.todayTasks = allTasks.filter(task => task.dueDate === today && !task.isCompleted);
+
+      allTasks.forEach(task => {
+        if (task.subTasks && task.subTasks.length > 0) {
+          task.subTasks.forEach(subtask => {
+            if (subtask.dueDate === today && !subtask.isCompleted) {
+              this.todayTasks.push(subtask);
+            }
+          });
+        }
+      });
+      
+      this.todayTasks = this.todayTasks;
+      console.log(this.todayTasks)
     }
 
     const storedToday = localStorage.getItem('today_task_map');
@@ -97,11 +127,12 @@ export class HomeComponent {
   }
   
   onAdd() {
-    if (!this.todayNewtask.title || !this.todayNewtask.dueDate) return;
+    if (!this.todayNewtask.title) return;
+    const today = formatDate(new Date(), 'yyyy-MM-dd', 'en');
     const task: Task = {
       id: Date.now().toString(),
       title: this.todayNewtask.title!,
-      dueDate: this.todayNewtask.dueDate!,
+      dueDate: today,
       isPinned: false,
       isCompleted: false
     };
@@ -112,6 +143,35 @@ export class HomeComponent {
     this.todayTaskMap[this.category_id].push(task);
     this.saveTasks();
     this.todayNewtask = { title: '', dueDate: '' };
+    this.loadTodayTasks();
+  }
+
+  onDeleteTask(task_id: string) {
+    let isDeleted = false;
+    if (this.todayTaskMap[this.category_id]) {
+      const initialLength = this.todayTaskMap[this.category_id].length;
+      this.todayTaskMap[this.category_id] = this.todayTaskMap[this.category_id].filter(task => task.id !== task_id);
+      if (this.todayTaskMap[this.category_id].length < initialLength) {
+        isDeleted = true;
+        this.saveTasks(); 
+      }
+    }
+
+    if (isDeleted) {
+      this.todayTasks = this.todayTasks.filter(task => task.id !== task_id);
+    }
+  }
+
+  toggleDropdown(task_id: string) {
+    this.openDropdownId = this.openDropdownId === task_id ? null : task_id;
+  }
+
+  @HostListener('document:click', ['$event'])
+  handleOutsideClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.dropdown-wrapper')) {
+      this.openDropdownId = null;
+    }
   }
 
   saveTasks() {

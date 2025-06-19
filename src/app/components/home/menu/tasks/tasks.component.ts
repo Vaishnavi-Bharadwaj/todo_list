@@ -28,6 +28,7 @@ interface SubTask {
   id: string;
   title: string;
   dueDate: string;
+  isPinned: boolean;
   isCompleted: boolean;
   priorityColor?: string
 }
@@ -65,6 +66,7 @@ export class TasksComponent {
       }
     }
     this.loadTasks();
+
   }
 
   get todo_tasks(): Task[] {
@@ -133,6 +135,7 @@ export class TasksComponent {
       id: Date.now().toString(),
       title: task.newSubtaskTitle.trim(),
       dueDate: task.newSubtaskDate,
+      isPinned: false,
       isCompleted: false
     }
     task.subTasks.push(subtask);
@@ -152,24 +155,50 @@ export class TasksComponent {
     if (!target.closest('.dropdown-wrapper')) {
       this.openDropdownId = null;
     }
+
+    this.todo_tasks.forEach(task => {
+      const subtaskInput = document.getElementById('subtask-input-' + task.id);
+      if (subtaskInput && !subtaskInput.contains(target)) {
+        task.showSubtaskInput = false;
+      }
+    });
+
   }
 
-  onDeleteTask(task_id:string)
-  {
-    this.taskMap[this.categoryId]=this.todo_tasks.filter((task)=>task.id!==task_id)
+  onDeleteTask(task_id: string) {
+    const mainTaskIndex = this.todo_tasks.findIndex(task => task.id === task_id);
+
+    if (mainTaskIndex !== -1) {
+      // If it's a main task, remove it
+      this.taskMap[this.categoryId].splice(mainTaskIndex, 1);
+    } else {
+      this.todo_tasks.forEach(task => {
+        if (task.subTasks && task.subTasks.length > 0) {
+          task.subTasks = task.subTasks.filter(subtask => subtask.id !== task_id);
+        }
+      });
+    }
+
     this.saveTasks();
     if (this.openDropdownId === task_id) {
       this.openDropdownId = null;
     }
   }
 
+
   pinTask(task: Task) {
     task.isPinned = true;
+    if (task.subTasks && task.subTasks.length > 0) {
+      task.subTasks.forEach(subtask => subtask.isPinned = true);
+    }
     this.saveTasks();
   }
 
   unPinTask(task: Task) {
     task.isPinned = false;
+    if (task.subTasks && task.subTasks.length > 0) {
+      task.subTasks.forEach(subtask => subtask.isPinned = false);
+    }
     this.saveTasks();
   }
 
@@ -227,7 +256,7 @@ export class TasksComponent {
       }
     }
 
-    this.taskMap[this.categoryId] = [...this.todo_tasks]; // Force refresh
+    this.taskMap[this.categoryId] = [...this.todo_tasks]; 
     this.saveTasks();
 
   }
@@ -260,8 +289,6 @@ export class TasksComponent {
     this.saveTasks();
   }
 
-
-
   get activeTasks(): Task[] {
     return this.todo_tasks.filter(t => !t.isCompleted && !t.isPinned);
   }
@@ -285,5 +312,6 @@ export class TasksComponent {
     if (stored) {
       this.taskMap = JSON.parse(stored);
     }
+    console.log(this.taskMap)
   }
 }
