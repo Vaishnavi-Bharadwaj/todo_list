@@ -148,12 +148,41 @@ export class HomeComponent {
 
   onDeleteTask(task_id: string) {
     let isDeleted = false;
-    if (this.todayTaskMap[this.category_id]) {
-      const initialLength = this.todayTaskMap[this.category_id].length;
-      this.todayTaskMap[this.category_id] = this.todayTaskMap[this.category_id].filter(task => task.id !== task_id);
-      if (this.todayTaskMap[this.category_id].length < initialLength) {
+
+    // Load the full task_map from localStorage
+    const stored = localStorage.getItem('task_map');
+    let taskMap: TaskMap = stored ? JSON.parse(stored) : {};
+
+    // Try to delete from task_map 
+    Object.keys(taskMap).forEach(menuId => {
+      const initialLength = taskMap[menuId].length;
+
+      taskMap[menuId] = taskMap[menuId].filter(task => task.id !== task_id);
+
+      // Try deleting from subtasks as well
+      taskMap[menuId].forEach(task => {
+        if (task.subTasks && task.subTasks.length > 0) {
+          task.subTasks = task.subTasks.filter(subtask => subtask.id !== task_id);
+        }
+      });
+
+      if (taskMap[menuId].length < initialLength) {
         isDeleted = true;
-        this.saveTasks(); 
+      }
+    });
+
+    if (isDeleted) {
+      localStorage.setItem('task_map', JSON.stringify(taskMap));
+    } else {
+      // If not in task_map, try deleting from todayTaskMap
+      if (this.todayTaskMap[this.category_id]) {
+        const initialLength = this.todayTaskMap[this.category_id].length;
+        this.todayTaskMap[this.category_id] = this.todayTaskMap[this.category_id].filter(task => task.id !== task_id);
+
+        if (this.todayTaskMap[this.category_id].length < initialLength) {
+          isDeleted = true;
+          this.saveTasks();
+        }
       }
     }
 

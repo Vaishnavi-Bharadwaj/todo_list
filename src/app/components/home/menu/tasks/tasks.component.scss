@@ -20,12 +20,9 @@
   overflow-y: auto;
 }
 
-
 .menu-closed .sidebar {
   transform: translateX(-100%);
 }
-
-
 
 .tasks_list {
   flex: 1;
@@ -285,6 +282,10 @@ input[type="checkbox"] {
 .completed-section .task.completed, 
 .completed-section .subtask.completed {
     width: 100%; 
+}
+
+.subtask.pinned {
+  background-color: #aeaaaa;
 }
 
 .dropdown-wrapper {

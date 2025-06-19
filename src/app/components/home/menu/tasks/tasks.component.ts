@@ -312,6 +312,5 @@ export class TasksComponent {
     if (stored) {
       this.taskMap = JSON.parse(stored);
     }
-    console.log(this.taskMap)
   }
 }
