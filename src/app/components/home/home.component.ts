@@ -20,6 +20,9 @@ interface Task {
   isCompleted: boolean;
   subTasks?: SubTask[];
   priorityColor: string;
+  newSubtaskTitle?: string;
+  newSubtaskDate?:string;
+  showSubtaskInput?: boolean;
 }
 
 interface SubTask {
@@ -50,7 +53,7 @@ export class HomeComponent {
   todayTasks: Task[] = [];
   todayNewtask: Partial<Task> = { title: '', dueDate: '' };  
   taskMap: TaskMap = {};
-  today: string = formatDate(new Date(), 'yyyy-MM-dd', 'en');
+  // today: string = formatDate(new Date(), 'yyyy-MM-dd', 'en');
 
   hideDatePicker() { 
     if (!this.preventBlur) {
@@ -100,6 +103,10 @@ export class HomeComponent {
         });
       });
     }
+    
+    this.todayTasks.forEach(task => {
+      task.showSubtaskInput = false;
+    });
   }
 
   onSelectCategory(menu_id:string)
@@ -129,6 +136,32 @@ export class HomeComponent {
 
     this.todayNewtask = { title: '', dueDate: '' };
     this.loadTodayTasks();
+  }
+
+  showSubtaskInput(task: Task) {
+    task.showSubtaskInput = true;
+  }
+
+  addSubtask(task: Task) {
+    if(!task.subTasks)
+      task.subTasks=[];
+    if(!task.newSubtaskTitle || task.newSubtaskTitle.trim()==='')
+      return;
+    if(!task.newSubtaskDate || task.newSubtaskDate.trim()==='')
+      return;
+    const subtask: SubTask = {
+      id: Date.now().toString(),
+      title: task.newSubtaskTitle.trim(),
+      dueDate: task.newSubtaskDate,
+      isPinned: false,
+      isCompleted: false,
+      priorityColor: 'black'
+    }
+    task.subTasks.push(subtask);
+    task.newSubtaskTitle='';
+    task.newSubtaskDate='';
+    this.saveTasks();
+    task.showSubtaskInput=false;
   }
 
   onDeleteTask(task_id: string) {

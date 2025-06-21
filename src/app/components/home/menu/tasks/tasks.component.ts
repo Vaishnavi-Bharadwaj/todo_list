@@ -318,5 +318,8 @@ export class TasksComponent {
     if (stored) {
       this.taskMap = JSON.parse(stored);
     }
+    this.todo_tasks.forEach(task => {
+      task.showSubtaskInput = false;
+    });
   }
 }

@@ -52,6 +52,7 @@
                                     <li class="medium-priority" (click)="mediumPriorityTask(task)">Medium Priority<img src="assets/medium.png" /></li>
                                     <li class="low-priority" (click)="lowPriorityTask(task)">Low Priority<img src="assets/low.png" /></li>
                                     <li class="no-priority" (click)="noPriorityTask(task)">No Priority<img src="assets/no-priority.png" /></li>
+                                    <li class="subtask-add" (click)="showSubtaskInput(task); $event.stopPropagation()">Add Subtask</li>
                                 </ul>
                             }
                         </div>
@@ -110,6 +111,7 @@
                                     <li class="medium-priority" (click)="mediumPriorityTask(task)">Medium Priority<img src="assets/medium.png" /></li>
                                     <li class="low-priority" (click)="lowPriorityTask(task)">Low Priority<img src="assets/low.png" /></li>
                                     <li class="no-priority" (click)="noPriorityTask(task)">No Priority<img src="assets/no-priority.png" /></li>
+                                    <li class="subtask-add" (click)="showSubtaskInput(task); $event.stopPropagation()">Add Subtask</li>
                                 </ul>
                             }
                         </div>
@@ -150,6 +152,25 @@
                                 
                             }
                         </div>
+                    }
+
+                    @if(task.showSubtaskInput)
+                    {
+                        <form (ngSubmit)="addSubtask(task)">
+                            <div class="input-subtask-wrapper" [id]="'subtask-input-' + task.id">
+                                <input type="text" placeholder="Add subtask" id="add" name="title" [(ngModel)]="task.newSubtaskTitle" required
+                                (focus)="showDate=true" (blur)="hideDatePicker(); "/>
+                                @if(showDate) 
+                                {
+                                    <div class="subtask-date-input" (mousedown)="preventBlur = true" (mouseup)="preventBlur = false">
+                                        <input type="date" id="date-input" name="dueDate"
+                                        required 
+                                        [(ngModel)]="task.newSubtaskDate" (blur)="hideDatePicker()"/>
+                                        <button class="submit-button" type="submit"><img src="assets/submit.png"></button>
+                                    </div>
+                                }
+                            </div>
+                        </form>
                     }
 
                 }
