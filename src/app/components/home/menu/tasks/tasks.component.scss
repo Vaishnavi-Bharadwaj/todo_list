@@ -193,22 +193,22 @@ header .add-task-button:hover {
 
 .task-row {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
   margin-left: 10px;
-  margin-bottom: 10px;
   gap: 12px;
 }
 
- .subtask-row {
+.subtask-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-left: 30px;
-  margin-bottom: 10px;
   gap: 12px;
 }
 
+.pinned-subtask-row {
+  margin-left: 30px;
+  gap: 12px;
+}
 
 .task, .subtask {
   padding: 8px;
@@ -218,6 +218,7 @@ header .add-task-button:hover {
   justify-content: space-between;
   border-radius: 8px;
   margin-left: -1px;
+  margin-bottom: 10px;
   flex:1;
 }
 

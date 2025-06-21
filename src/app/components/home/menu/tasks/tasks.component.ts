@@ -17,7 +17,7 @@ interface Task {
   isPinned: boolean;
   isCompleted: boolean;
   isEditing?: boolean;
-  priorityColor?: string
+  priorityColor: string
   subTasks?: SubTask[];
   newSubtaskTitle?: string;
   newSubtaskDate?:string;
@@ -30,7 +30,7 @@ interface SubTask {
   dueDate: string;
   isPinned: boolean;
   isCompleted: boolean;
-  priorityColor?: string
+  priorityColor: string
 }
 
 interface TaskMap {
@@ -109,7 +109,8 @@ export class TasksComponent {
       title: this.newTask.title!,
       dueDate: this.newTask.dueDate!,
       isPinned: false,
-      isCompleted: false
+      isCompleted: false,
+      priorityColor: 'black'
     };
     if (!this.taskMap[this.categoryId]) {
       this.taskMap[this.categoryId] = [];
@@ -136,7 +137,8 @@ export class TasksComponent {
       title: task.newSubtaskTitle.trim(),
       dueDate: task.newSubtaskDate,
       isPinned: false,
-      isCompleted: false
+      isCompleted: false,
+      priorityColor: 'black'
     }
     task.subTasks.push(subtask);
     task.newSubtaskTitle='';
@@ -204,18 +206,22 @@ export class TasksComponent {
 
   highPriorityTask(task: Task) {
     task.priorityColor= 'red';
+    this.saveTasks();
   }
 
   mediumPriorityTask(task: Task) {
     task.priorityColor='yellow';
+    this.saveTasks();
   }
 
   lowPriorityTask(task: Task) {
     task.priorityColor= 'blue';
+    this.saveTasks();
   }
 
   noPriorityTask(task: Task) {
     task.priorityColor='black';
+    this.saveTasks();
   }
 
   editTask(task: Task) {

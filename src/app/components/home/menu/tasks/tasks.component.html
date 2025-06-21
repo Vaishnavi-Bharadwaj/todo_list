@@ -66,11 +66,11 @@
                     <!-- Subtasks under Pinned Task -->
                     @if (task.subTasks && task.subTasks.length > 0) {
                         <div class="subtask-section">
-                            <div class="subtask-row">
+                            <div class="pinned-subtask-row">
                                 @for (subtask of task.subTasks; track subtask.id) {
                                     @if (!subtask.isCompleted) 
                                     { 
-                                        <div class="subtask pinned">
+                                        <div class="subtask pinned" [ngStyle]="{'color': subtask.priorityColor}">
                                             <div class="left-content">
                                                 <input type="checkbox" (change)="markComplete(subtask)" />
                                                 <span class="title">{{ subtask.title }}</span>

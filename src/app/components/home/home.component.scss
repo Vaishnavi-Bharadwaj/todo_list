@@ -164,10 +164,7 @@ header span {
 
 .task-row {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
   margin-left: 10px;
-  margin-bottom: 10px;
   gap: 12px;
 }
 
@@ -231,7 +228,7 @@ input[type="checkbox"] {
   border-radius: 4px;
   box-shadow: 0px 2px 5px rgba(0,0,0,0.15);
   padding:0;
-  height: 34px; 
+  height: 208px; 
 }
 
 .dropdown-menu li {
@@ -245,4 +242,123 @@ input[type="checkbox"] {
 .dropdown-menu .delete:hover {
   background-color: #f6e4e4;
   color:red
+}
+
+.subtask-section .dropdown-menu {
+  height: 173px;
+}
+
+.subtask-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 30px;
+  gap: 12px;
+}
+
+.task, .subtask {
+  padding: 8px;
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 8px;
+  margin-left: -1px;
+  margin-bottom: 10px;
+  flex:1;
+}
+
+.subtask:hover {
+  background-color: rgb(227, 226, 226);
+}
+
+.pinned-subtask-row {
+  margin-left: 30px;
+  gap: 12px;
+}
+
+.subtask.pinned {
+  background-color: #aeaaaa;
+}
+
+.pinned-section {
+  margin-bottom: 1rem;
+
+  h4 {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+
+  .task.pinned {
+    background-color: #b2b2b2;
+    border-left: 4px solid #888887;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
+  }
+
+  .divider {
+    border: none;
+    border-top: 2px dashed #ccc;
+    margin-top: 1rem;
+  }
+}
+
+.dropdown-menu .pin:hover {
+  background-color: #ccc;
+}
+
+
+.dropdown-menu .high-priority:hover, .medium-priority:hover, .low-priority:hover, .no-priority:hover, .subtask-add:hover {
+  background-color: #ccc;
+}
+
+.dropdown-menu .high-priority, .medium-priority, .low-priority, .no-priority {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dropdown-menu .high-priority img, .medium-priority img, .low-priority img, .no-priority img{
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.task.completed, .subtask.completed {
+  background-color: #e0e0e0;
+  color: #666;
+  border: 1px solid #ccc;
+  width: 90%;
+}
+
+
+.task.completed input[type="checkbox"], .subtask.completed input[type="checkbox"]{
+  accent-color: grey; 
+}
+
+.task.completed .title, .subtask.completed .title{
+  color: #666;
+}
+
+.task.completed .day,  .subtask.completed .day{
+  color: #888;
+}
+
+.completed-section .task-row {
+    display: flex;
+    flex-direction: column; 
+    gap: 15px; 
+}
+
+.completed-section .subtask-row {
+    display: flex;
+    flex-direction: column; 
+    margin-left: 30px; 
+    gap: 10px; 
+}
+
+.completed-section .task.completed, 
+.completed-section .subtask.completed {
+    width: 100%; 
 }

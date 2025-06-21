@@ -4,6 +4,7 @@ import { TasksComponent } from './menu/tasks/tasks.component';
 import { DUMMY_MENU_LIST } from './dummy-menu-list';
 import { FormsModule } from '@angular/forms';
 import { DatePipe, formatDate } from '@angular/common';
+import { CommonModule } from '@angular/common';
 interface Category {
   menu_id: string;
   name: string;
@@ -18,7 +19,7 @@ interface Task {
   isPinned: boolean;
   isCompleted: boolean;
   subTasks?: SubTask[];
-  priorityColor?: string;
+  priorityColor: string;
 }
 
 interface SubTask {
@@ -27,7 +28,7 @@ interface SubTask {
   dueDate: string;
   isPinned: boolean;
   isCompleted: boolean;
-  priorityColor?: string;
+  priorityColor: string;
 }
 
 interface TaskMap {
@@ -36,7 +37,7 @@ interface TaskMap {
 
 @Component({
   selector: 'app-home',
-  imports: [MenuComponent, TasksComponent, FormsModule, DatePipe],
+  imports: [MenuComponent, TasksComponent, FormsModule, DatePipe, CommonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -47,9 +48,9 @@ export class HomeComponent {
   openDropdownId: string | null = null;
   category_id: string;
   todayTasks: Task[] = [];
-  todayAddedTasks: Task[] = [];
   todayNewtask: Partial<Task> = { title: '', dueDate: '' };  
-  todayTaskMap: TaskMap = {};
+  taskMap: TaskMap = {};
+  today: string = formatDate(new Date(), 'yyyy-MM-dd', 'en');
 
   hideDatePicker() { 
     if (!this.preventBlur) {
@@ -65,7 +66,6 @@ export class HomeComponent {
   category_list:Category[]=[];
   constructor() {
     const menu_list = localStorage.getItem('menu_list');
-
     if (menu_list) {
       this.category_list = JSON.parse(menu_list);
     } else {
@@ -74,120 +74,218 @@ export class HomeComponent {
     }
     this.category_id=this.category_list[0].menu_id;
     
-    const storedTodayMap = localStorage.getItem('today_task_map');
-    if (storedTodayMap) {
-      this.todayTaskMap = JSON.parse(storedTodayMap);
+    const stored = localStorage.getItem('task_map');
+    if (stored) {
+      this.taskMap  = JSON.parse(stored);
     }
-
     this.loadTodayTasks();
   }
 
   loadTodayTasks() {
     const stored = localStorage.getItem('task_map');
     if (stored) {
-      const taskMap: TaskMap = JSON.parse(stored);
+      this.taskMap = JSON.parse(stored);
       const today = formatDate(new Date(), 'yyyy-MM-dd', 'en');
-
-      let allTasks: Task[] = [];
-      Object.values(taskMap).forEach(taskList => {
-        allTasks = [...allTasks, ...taskList];
+      this.todayTasks = [];
+      Object.values(this.taskMap).forEach(taskList => {
+        taskList.forEach(task => {
+          const isTaskDueToday = task.dueDate === today;
+          let hasSubtaskDueToday = false;
+          if (task.subTasks && task.subTasks.length > 0) {
+            hasSubtaskDueToday = task.subTasks.some(subtask => subtask.dueDate === today);
+          }
+          if (isTaskDueToday || hasSubtaskDueToday) {
+            this.todayTasks.push(task); // Push full task object without filtering subtasks
+          }
+        });
       });
-      this.todayTasks = allTasks.filter(task => task.dueDate === today && !task.isCompleted);
-
-      allTasks.forEach(task => {
-        if (task.subTasks && task.subTasks.length > 0) {
-          task.subTasks.forEach(subtask => {
-            if (subtask.dueDate === today && !subtask.isCompleted) {
-              this.todayTasks.push(subtask);
-            }
-          });
-        }
-      });
-      
-      this.todayTasks = this.todayTasks;
-      console.log(this.todayTasks)
     }
-
-    const storedToday = localStorage.getItem('today_task_map');
-    if (storedToday) {
-      const todayTaskMap: TaskMap = JSON.parse(storedToday);
-      let allTodayTasks: Task[] = [];
-      Object.values(todayTaskMap).forEach(taskList => {
-        allTodayTasks = [...allTodayTasks, ...taskList];
-      });
-      this.todayAddedTasks = allTodayTasks;
-    }
-
-    this.todayTasks = [...this.todayTasks, ...this.todayAddedTasks];
   }
 
   onSelectCategory(menu_id:string)
   {
     this.category_id=menu_id;
   }
-  
+
   onAdd() {
     if (!this.todayNewtask.title) return;
+
     const today = formatDate(new Date(), 'yyyy-MM-dd', 'en');
     const task: Task = {
       id: Date.now().toString(),
       title: this.todayNewtask.title!,
       dueDate: today,
       isPinned: false,
-      isCompleted: false
+      isCompleted: false,
+      priorityColor: 'black'
     };
-    if (!this.todayTaskMap[this.category_id]) {
-      this.todayTaskMap[this.category_id] = [];
+
+    if (!this.taskMap[this.category_id]) {
+      this.taskMap[this.category_id] = [];
     }
 
-    this.todayTaskMap[this.category_id].push(task);
-    this.saveTasks();
+    this.taskMap[this.category_id].push(task);
+    localStorage.setItem('task_map', JSON.stringify(this.taskMap));
+
     this.todayNewtask = { title: '', dueDate: '' };
     this.loadTodayTasks();
   }
 
   onDeleteTask(task_id: string) {
+    const stored = localStorage.getItem('task_map');
+    if (!stored) return;
+
+    let taskMap: TaskMap = JSON.parse(stored);
     let isDeleted = false;
 
-    // Load the full task_map from localStorage
-    const stored = localStorage.getItem('task_map');
-    let taskMap: TaskMap = stored ? JSON.parse(stored) : {};
-
-    // Try to delete from task_map 
     Object.keys(taskMap).forEach(menuId => {
+      // Try to delete main task
       const initialLength = taskMap[menuId].length;
 
       taskMap[menuId] = taskMap[menuId].filter(task => task.id !== task_id);
 
-      // Try deleting from subtasks as well
+      if (taskMap[menuId].length < initialLength) {
+        isDeleted = true; // Main task deleted
+      }
+
+      // Try to delete from subtasks
       taskMap[menuId].forEach(task => {
         if (task.subTasks && task.subTasks.length > 0) {
+          const initialSubLength = task.subTasks.length;
+
           task.subTasks = task.subTasks.filter(subtask => subtask.id !== task_id);
+
+          if (task.subTasks.length < initialSubLength) {
+            isDeleted = true; // Subtask deleted
+          }
         }
       });
-
-      if (taskMap[menuId].length < initialLength) {
-        isDeleted = true;
-      }
     });
 
     if (isDeleted) {
       localStorage.setItem('task_map', JSON.stringify(taskMap));
-    } else {
-      // If not in task_map, try deleting from todayTaskMap
-      if (this.todayTaskMap[this.category_id]) {
-        const initialLength = this.todayTaskMap[this.category_id].length;
-        this.todayTaskMap[this.category_id] = this.todayTaskMap[this.category_id].filter(task => task.id !== task_id);
+      this.loadTodayTasks(); 
+    }
+  }
 
-        if (this.todayTaskMap[this.category_id].length < initialLength) {
-          isDeleted = true;
-          this.saveTasks();
+  pinTask(task: Task) {
+    task.isPinned = true;
+    if (task.subTasks && task.subTasks.length > 0) {
+      task.subTasks.forEach(subtask => subtask.isPinned = true);
+    }
+    this.loadTasks(task)
+    this.saveTasks();
+  }
+
+  unPinTask(task: Task) {
+    task.isPinned = false;
+    if (task.subTasks && task.subTasks.length > 0) {
+      task.subTasks.forEach(subtask => subtask.isPinned = false);
+    }
+    this.loadTasks(task)
+    this.saveTasks();
+  }
+
+  highPriorityTask(task: Task) {
+    task.priorityColor = 'red';
+    this.loadTasks(task)
+    this.saveTasks();
+  }
+
+  mediumPriorityTask(task: Task) {
+    task.priorityColor='yellow';
+    this.loadTasks(task)
+    this.saveTasks();
+  }
+
+  lowPriorityTask(task: Task) {
+    task.priorityColor= 'blue';
+    this.loadTasks(task)
+    this.saveTasks();
+  }
+
+  noPriorityTask(task: Task) {
+    task.priorityColor='black';
+    this.loadTasks(task)
+    this.saveTasks();
+  }
+
+  loadTasks(task:Task) {
+    const stored = localStorage.getItem('task_map');
+    if (stored) {
+      const taskMap: TaskMap = JSON.parse(stored);
+      for (const menuId in taskMap) {
+        const taskList = taskMap[menuId];
+        const index = taskList.findIndex(t => t.id === task.id);
+        if (index !== -1) {
+          taskMap[menuId][index] = task;
+          break;
         }
       }
     }
+  }
 
-    if (isDeleted) {
-      this.todayTasks = this.todayTasks.filter(task => task.id !== task_id);
+  markComplete(item: Task | SubTask) {
+    for (const menuId in this.taskMap) {
+      for (const task of this.taskMap[menuId]) {
+        // Main Task
+        if (task.id === item.id) {
+          task.isCompleted = true;
+          if (task.subTasks && task.subTasks.length > 0) {
+            task.subTasks.forEach(subtask => subtask.isCompleted = true);
+          }
+          this.saveTasks();
+          this.loadTodayTasks();
+          return;
+        }
+
+        // SubTask
+        if (task.subTasks && task.subTasks.length > 0) {
+          const subtaskIndex = task.subTasks.findIndex(sub => sub.id === item.id);
+          if (subtaskIndex !== -1) {
+            task.subTasks[subtaskIndex].isCompleted = true;
+            // When a subtask is marked complete, keep the parent incomplete
+            task.isCompleted = false;
+            this.saveTasks();
+            this.loadTodayTasks();
+            return;
+          }
+        }
+      }
+    }
+  }
+
+
+  markIncomplete(item: Task | SubTask, parentTask?: Task) {
+    const stored = localStorage.getItem('task_map');
+    if (!stored) return;
+    let taskMap: TaskMap = JSON.parse(stored);
+    for (const menuId in taskMap) {
+      for (const task of taskMap[menuId]) {
+        // Main Task
+        if (task.id === item.id) {
+          task.isCompleted = false;
+          // When main task is unchecked, do not change the subtasks
+          localStorage.setItem('task_map', JSON.stringify(taskMap));
+          this.loadTodayTasks();
+          return;
+        }
+
+        // SubTask
+        if (task.subTasks && task.subTasks.length > 0) {
+          const subtaskIndex = task.subTasks.findIndex(sub => sub.id === item.id);
+          if (subtaskIndex !== -1) {
+            task.subTasks[subtaskIndex].isCompleted = false;
+            // Uncheck parent if any subtask is incomplete
+            if (task.isCompleted) {
+              task.isCompleted = false;
+            }
+            localStorage.setItem('task_map', JSON.stringify(taskMap));
+            this.loadTodayTasks();
+            return;
+          }
+        }
+      }
     }
   }
 
@@ -203,8 +301,22 @@ export class HomeComponent {
     }
   }
 
+  get pinnedTasks(): Task[] {
+    return this.todayTasks.filter(t => t.isPinned && !t.isCompleted);
+  }
+
+  get activeTasks(): Task[] {
+    return this.todayTasks.filter(t => !t.isCompleted && !t.isPinned);
+  }
+
+  get completedTasks(): Task[] {
+    return this.todayTasks.filter(task => 
+      task.isCompleted || (task.subTasks && task.subTasks.length > 0 && task.subTasks.some(sub => sub.isCompleted))
+    );
+  }
+
   saveTasks() {
-    localStorage.setItem('today_task_map', JSON.stringify(this.todayTaskMap));
+    localStorage.setItem('task_map', JSON.stringify(this.taskMap));
   }
 
 }

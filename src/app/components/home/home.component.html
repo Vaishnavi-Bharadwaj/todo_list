@@ -29,7 +29,58 @@
                 </form>
         </header>
 
-        @if(todayTasks.length === 0)
+        @if (pinnedTasks.length > 0) {
+            <div class="pinned-section">
+                <h4>Pinned</h4>
+                @for(task of pinnedTasks; track task.id) {
+                    <div class="task-row">
+                        <div class="task pinned" [ngStyle]="{'color': task.priorityColor}">
+                            <div class="left-content"  >
+                                <input type="checkbox" (change)="markComplete(task)"/>
+                                <span class="title">{{ task.title }}</span>
+                            </div>
+                            <span class="day">{{ task.dueDate | date: 'MMM d' }}</span>
+                        </div>
+
+                        <div class="dropdown-wrapper">
+                            <div class="dots-button" (click)="toggleDropdown(task.id); $event.stopPropagation()">...</div>
+                            @if (openDropdownId === task.id) {
+                                <ul class="dropdown-menu">
+                                    <li class="delete" (click)="onDeleteTask(task.id); $event.stopPropagation()">Delete</li>
+                                    <li class="pin" (click)="unPinTask(task); $event.stopPropagation()">Unpin</li>
+                                    <li class="high-priority" (click)="highPriorityTask(task)">High Priority<img src="assets/high.png" /></li>
+                                    <li class="medium-priority" (click)="mediumPriorityTask(task)">Medium Priority<img src="assets/medium.png" /></li>
+                                    <li class="low-priority" (click)="lowPriorityTask(task)">Low Priority<img src="assets/low.png" /></li>
+                                    <li class="no-priority" (click)="noPriorityTask(task)">No Priority<img src="assets/no-priority.png" /></li>
+                                </ul>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Subtasks under Pinned Task -->
+                    @if (task.subTasks && task.subTasks.length > 0) {
+                        <div class="subtask-section">
+                            <div class="pinned-subtask-row">
+                                @for (subtask of task.subTasks; track subtask.id) {
+                                    @if (!subtask.isCompleted) 
+                                    { 
+                                        <div class="subtask pinned" [ngStyle]="{'color': subtask.priorityColor}">
+                                            <div class="left-content">
+                                                <input type="checkbox" (change)="markComplete(subtask)"/>
+                                                <span class="title">{{ subtask.title }}</span>
+                                            </div>
+                                            <span class="day">{{ subtask.dueDate | date: 'MMM d' }}</span>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        }
+
+        @if(todayTasks.length === 0 && pinnedTasks.length===0 && completedTasks.length===0)
         {
             <div class="empty-list">
                 <div class="image"></div>
@@ -39,14 +90,14 @@
         }
         @else {
             <div class="task-section">
-                @for (task of todayTasks; track task.id) {
+                @for (task of activeTasks; track task.id) {
                     <div class="task-row">
-                        <div class="task">
-                        <div class="left-content">
-                            <input type="checkbox" />
-                            <span class="title">{{ task.title }}</span>
-                        </div>
-                        <span class="day">{{ task.dueDate | date: 'MMM d' }}</span>
+                        <div class="task" [ngStyle]="{'color': task.priorityColor}">
+                            <div class="left-content">
+                                <input type="checkbox" [checked]="task.isCompleted" (change)="markComplete(task)"/>
+                                <span class="title">{{ task.title }}</span>
+                            </div>
+                            <span class="day">{{ task.dueDate | date: 'MMM d' }}</span>
                         </div>
 
                         <div class="dropdown-wrapper">
@@ -54,14 +105,97 @@
                             @if (openDropdownId === task.id) {
                                 <ul class="dropdown-menu">
                                     <li class="delete" (click)="onDeleteTask(task.id); $event.stopPropagation()">Delete</li>
+                                    <li class="pin" (click)="pinTask(task); $event.stopPropagation()">Pin</li>
+                                    <li class="high-priority" (click)="highPriorityTask(task)">High Priority<img src="assets/high.png" /></li>
+                                    <li class="medium-priority" (click)="mediumPriorityTask(task)">Medium Priority<img src="assets/medium.png" /></li>
+                                    <li class="low-priority" (click)="lowPriorityTask(task)">Low Priority<img src="assets/low.png" /></li>
+                                    <li class="no-priority" (click)="noPriorityTask(task)">No Priority<img src="assets/no-priority.png" /></li>
                                 </ul>
                             }
                         </div>
 
                     </div>
+
+                    <!-- Subtasks Section -->
+                    @if (task.subTasks && task.subTasks.length > 0)
+                    {
+                        <div class="subtask-section">
+                            @for (subtask of task.subTasks; track subtask.id)
+                            {
+                                @if(!subtask.isCompleted){
+                                    <div class="subtask-row">
+                                        <div class="subtask" [ngStyle]="{'color': subtask.priorityColor}">
+                                            <div class="left-content">
+                                                <input type="checkbox" [checked]="subtask.isCompleted" (change)="markComplete(subtask)"/>
+                                                <span class="title">{{ subtask.title }}</span>
+                                            </div>
+                                            <span class="day">{{ subtask.dueDate | date: 'MMM d' }}</span>
+                                        </div>
+
+                                        <div class="dropdown-wrapper">
+                                            <div class="dots-button" (click)="toggleDropdown(subtask.id); $event.stopPropagation()">...</div>
+                                            @if (openDropdownId === subtask.id)
+                                            {
+                                                <ul class="dropdown-menu">
+                                                    <li class="delete" (click)="onDeleteTask(subtask.id); $event.stopPropagation()">Delete</li>
+                                                    <li class="high-priority" (click)="highPriorityTask(subtask)">High Priority<img src="assets/high.png" /></li>
+                                                    <li class="medium-priority" (click)="mediumPriorityTask(subtask)">Medium Priority<img src="assets/medium.png" /></li>
+                                                    <li class="low-priority" (click)="lowPriorityTask(subtask)">Low Priority<img src="assets/low.png" /></li>
+                                                    <li class="no-priority" (click)="noPriorityTask(subtask)">No Priority<img src="assets/no-priority.png" /></li>
+                                                </ul>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                                
+                            }
+                        </div>
+                    }
+
                 }
             </div>
         }
         
+        @if(completedTasks.length>0)
+        {
+            <div class="completed-section">
+                <h4>Completed Tasks</h4>
+                <div class="task-row">
+                    @for (task of completedTasks; track task.id) {
+                        @if(task.isCompleted)
+                        {
+                            <div class="task completed">
+                                <div class="left-content">
+                                    <input class="incomplete" type="checkbox" checked (change)="markIncomplete(task)" />
+                                    <span class="title">{{ task.title }}</span>
+                                </div>
+                                <span class="day">{{ task.dueDate |  date: 'MMM d'}}</span>
+                            </div>
+                        }
+                        
+                         <!-- Subtasks under Completed Task -->
+                        @if (task.subTasks && task.subTasks.length > 0) {
+                            <div class="subtask-section">
+                                <div class="subtask-row">
+                                    @for (subtask of task.subTasks; track subtask.id) {
+                                        @if(subtask.isCompleted)
+                                        {
+                                            <div class="subtask completed">
+                                                <div class="left-content">
+                                                    <input class="incomplete" type="checkbox" checked (change)="markIncomplete(subtask, task)" />
+                                                    <span class="title">{{ subtask.title }}</span>
+                                                </div>
+                                                <span class="day">{{ subtask.dueDate | date: 'MMM d' }}</span>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        }
+
     </div>
 </div>
