@@ -175,9 +175,7 @@ export class HomeComponent {
     Object.keys(taskMap).forEach(menuId => {
       // Try to delete main task
       const initialLength = taskMap[menuId].length;
-
       taskMap[menuId] = taskMap[menuId].filter(task => task.id !== task_id);
-
       if (taskMap[menuId].length < initialLength) {
         isDeleted = true; // Main task deleted
       }
@@ -186,9 +184,7 @@ export class HomeComponent {
       taskMap[menuId].forEach(task => {
         if (task.subTasks && task.subTasks.length > 0) {
           const initialSubLength = task.subTasks.length;
-
           task.subTasks = task.subTasks.filter(subtask => subtask.id !== task_id);
-
           if (task.subTasks.length < initialSubLength) {
             isDeleted = true; // Subtask deleted
           }
