@@ -10,11 +10,11 @@
       {
         <li>
            @if(originalMenuIds.has(menu.menu_id)){
-            <button [class.active]="isActive(menu.path)" (click)="onSelectMenu(menu.path)"> 
-              <img [src]="'assets/icons/'+ menu.icon" [alt]="menu.name"/>
-              <span>{{menu.name}}</span>
-            </button>
-          }
+              <button [class.active]="isActive(menu.path)" (click)="onSelectMenu(menu.path)"> 
+                <img [src]="'assets/icons/'+ menu.icon" [alt]="menu.name"/>
+                <span>{{menu.name}}</span>
+              </button>
+            }
 
           @else {
             <button [class.active]="selectedCategoryId === menu.menu_id" (click)="onSelectCategory(menu.menu_id)"> 

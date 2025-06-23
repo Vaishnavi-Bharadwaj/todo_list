@@ -53,7 +53,6 @@ export class HomeComponent {
   todayTasks: Task[] = [];
   todayNewtask: Partial<Task> = { title: '', dueDate: '' };  
   taskMap: TaskMap = {};
-  // today: string = formatDate(new Date(), 'yyyy-MM-dd', 'en');
 
   hideDatePicker() { 
     if (!this.preventBlur) {
