@@ -89,22 +89,24 @@ export class HomeComponent {
       this.taskMap = JSON.parse(stored);
       const today = formatDate(new Date(), 'yyyy-MM-dd', 'en');
       this.todayTasks = [];
+
       Object.values(this.taskMap).forEach(taskList => {
         taskList.forEach(task => {
           const isTaskDueToday = task.dueDate === today;
-          let hasSubtaskDueToday = false;
-          if (task.subTasks && task.subTasks.length > 0) {
-            hasSubtaskDueToday = task.subTasks.some(subtask => subtask.dueDate === today);
-          }
-          if (isTaskDueToday || hasSubtaskDueToday) {
-            this.todayTasks.push(task); // Push full task object without filtering subtasks
+          if (isTaskDueToday) {
+            this.todayTasks.push(task);
+          } else if (task.subTasks && task.subTasks.length > 0) {
+            const subtasksDueToday = task.subTasks.filter(subtask => subtask.dueDate === today);
+            subtasksDueToday.forEach(subtask => {
+              this.todayTasks.push(subtask);
+            });
           }
         });
       });
     }
-    
-    this.todayTasks.forEach(task => {
-      task.showSubtaskInput = false;
+
+    this.todayTasks.forEach(item => {
+      item.showSubtaskInput = false;
     });
   }
 
