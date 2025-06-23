@@ -20,7 +20,7 @@
                         @if(showDate) 
                         {
                             <div class="date-input" (mousedown)="preventBlur = true" (mouseup)="preventBlur = false">
-                                <input type="date" id="date-input" name="dueDate" required 
+                                <input type="date" id="date-input" name="dueDate" required [attr.min]="today" [attr.max]="today"
                                 [(ngModel)]="todayNewtask.dueDate" (blur)="hideDatePicker()"/>
                                 <button class="submit-button" type="submit"><img src="assets/submit.png"></button>
                             </div>

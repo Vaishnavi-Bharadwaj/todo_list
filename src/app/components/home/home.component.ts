@@ -53,6 +53,7 @@ export class HomeComponent {
   todayTasks: Task[] = [];
   todayNewtask: Partial<Task> = { title: '', dueDate: '' };  
   taskMap: TaskMap = {};
+  today = formatDate(new Date(), 'yyyy-MM-dd', 'en');
 
   hideDatePicker() { 
     if (!this.preventBlur) {
@@ -329,6 +330,13 @@ export class HomeComponent {
     if (!target.closest('.dropdown-wrapper')) {
       this.openDropdownId = null;
     }
+
+    this.todayTasks.forEach(task => {
+      const subtaskInput = document.getElementById('subtask-input-' + task.id);
+      if (subtaskInput && !subtaskInput.contains(target)) {
+        task.showSubtaskInput = false;
+      }
+    });
   }
 
   get pinnedTasks(): Task[] {
