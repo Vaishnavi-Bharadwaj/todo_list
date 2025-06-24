@@ -247,12 +247,17 @@ export class TasksComponent {
   }
 
   markComplete(item: Task | SubTask) {
-    if ('subTasks' in item) { // main task
-    item.isCompleted = true;
-    if (item.subTasks && item.subTasks.length > 0) {
-        item.subTasks.forEach(subtask => subtask.isCompleted = true);
-      }
-    } else { // subtask
+    if ('subTasks' in item) 
+    { 
+      // main task
+      item.isCompleted = true;
+      if (item.subTasks && item.subTasks.length > 0) {
+          item.subTasks.forEach(subtask => subtask.isCompleted = true);
+        }
+    } 
+    else 
+    { 
+      // subtask
       item.isCompleted = true;
       for (const task of this.todo_tasks) {
         if (task.subTasks?.some(sub => sub.id === item.id)) {

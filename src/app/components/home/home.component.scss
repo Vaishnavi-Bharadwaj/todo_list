@@ -94,10 +94,6 @@ header span {
   top: 64%;
   right: -2%;
   transform: translateY(-50%);
-
-  display: flex;
-  gap: 6px;
-  align-items: center;
 }
 
 .date-input input {
@@ -106,7 +102,6 @@ header span {
   border: 1px solid #ccc;
   border-radius: 4px;
   cursor: pointer;
-
   color: #007bff; 
   text-shadow: none; 
 }
@@ -124,9 +119,6 @@ header span {
   border-radius: 6px;
   color: white;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .date-input .submit-button img {
@@ -173,7 +165,6 @@ header span {
   padding: 8px;
   border: 1px solid #ddd;
   display: flex;
-  align-items: center;
   justify-content: space-between;
   border-radius: 8px;
   margin-left: -1px;
@@ -186,7 +177,6 @@ header span {
 
 .left-content {
   display: flex;
-  align-items: center;
   gap: 6px;
 }
 
@@ -250,8 +240,6 @@ input[type="checkbox"] {
 
 .subtask-row {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
   margin-left: 30px;
   gap: 12px;
 }
@@ -260,7 +248,6 @@ input[type="checkbox"] {
   padding: 8px;
   border: 1px solid #ddd;
   display: flex;
-  align-items: center;
   justify-content: space-between;
   border-radius: 8px;
   margin-left: -1px;
@@ -383,7 +370,6 @@ input[type="checkbox"] {
   transform: translateY(-50%);
   display: flex;
   gap: 6px;
-  align-items: center;
 }
 
 .date-input input, .subtask-date-input  input {
@@ -392,7 +378,6 @@ input[type="checkbox"] {
   border: 1px solid #ccc;
   border-radius: 4px;
   cursor: pointer;
-
   color: #007bff; 
   text-shadow: none; 
 }
@@ -411,8 +396,6 @@ input[type="checkbox"] {
   color: white;
   cursor: pointer;
   display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .date-input .submit-button img, .subtask-date-input  .submit-button img{

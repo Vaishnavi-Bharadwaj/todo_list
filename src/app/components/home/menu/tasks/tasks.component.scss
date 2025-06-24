@@ -31,7 +31,6 @@
   box-sizing: border-box;
   overflow-y: auto;
   transition: margin-left 0.3s ease;
-  
 }
 
 .menu-open .tasks_list {
@@ -80,7 +79,6 @@ header .add-task-button:hover {
   transform: translateY(-1px);
 }
 
-
 #add {
   width: 100%;
   padding: 0.50rem 0.75rem;
@@ -91,7 +89,6 @@ header .add-task-button:hover {
   background-color: #f0efef;
   margin-top: 1rem;
   margin-left: 6px;
-
 }
 
 #add::placeholder {
@@ -134,7 +131,6 @@ header .add-task-button:hover {
   border: 1px solid #ccc;
   border-radius: 4px;
   cursor: pointer;
-
   color: #007bff; 
   text-shadow: none; 
 }
@@ -154,14 +150,12 @@ header .add-task-button:hover {
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
 .date-input .submit-button img, .subtask-date-input  .submit-button img{
   width: 20px;               
   height: 20px;
 }
-
 
 .empty-list {
   margin-top: 11rem;
@@ -214,7 +208,6 @@ header .add-task-button:hover {
   padding: 8px;
   border: 1px solid #ddd;
   display: flex;
-  align-items: center;
   justify-content: space-between;
   border-radius: 8px;
   margin-left: -1px;
@@ -228,7 +221,6 @@ header .add-task-button:hover {
 
 .left-content {
   display: flex;
-  align-items: center;
   gap: 6px;
 }
 
@@ -253,7 +245,6 @@ input[type="checkbox"] {
   border: 1px solid #ccc;
   width: 90%;
 }
-
 
 .task.completed input[type="checkbox"], .subtask.completed input[type="checkbox"]{
   accent-color: grey; 
