@@ -139,7 +139,10 @@
                                             <div class="left-content">
                                                 <input type="checkbox" [checked]="subtask.isCompleted" (change)="markComplete(subtask)"/>
                                                 <span class="title"
+                                                    contenteditable="true"
                                                     [textContent]="subtask.title"
+                                                    (blur)="onEditTask(subtask, $event)"
+                                                    (keydown)="onKeydown(subtask, $event)"
                                                 >
                                                 </span>
                                             </div>

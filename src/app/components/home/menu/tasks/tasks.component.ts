@@ -228,19 +228,19 @@ export class TasksComponent {
     task.isEditing = true;
   }
 
-  onEditTask(task: Task, event: any) {
+  onEditTask(item: Task | SubTask, event: any) {
     const updatedText = event.target.innerText.trim();
     if (updatedText) {
-      task.title = updatedText;
+      item.title = updatedText;
       this.saveTasks();
     } else {
-      event.target.innerText = task.title;
+      event.target.innerText = item.title;
     }
   }
 
-  onKeydown(task: Task, event: KeyboardEvent) {
+  onKeydown(item: Task | SubTask, event: KeyboardEvent) {
     if (event.key === 'Enter') {
-      this.onEditTask(task, event);
+      this.onEditTask(item, event);
       (event.target as HTMLElement).blur();
       event.preventDefault();
     }
