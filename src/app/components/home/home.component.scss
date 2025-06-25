@@ -402,3 +402,13 @@ input[type="checkbox"] {
   width: 20px;               
   height: 20px;
 }
+
+.task .title, .subtask .title {
+  cursor: text;
+  outline: none;
+}
+
+.task .title:focus, .subtask .title:focus {
+  background-color: #f0f8ff;
+  border-radius: 4px;
+}

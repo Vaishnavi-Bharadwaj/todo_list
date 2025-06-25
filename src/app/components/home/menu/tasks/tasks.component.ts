@@ -224,10 +224,6 @@ export class TasksComponent {
     this.saveTasks();
   }
 
-  editTask(task: Task) {
-    task.isEditing = true;
-  }
-
   onEditTask(item: Task | SubTask, event: any) {
     const updatedText = event.target.innerText.trim();
     if (updatedText) {

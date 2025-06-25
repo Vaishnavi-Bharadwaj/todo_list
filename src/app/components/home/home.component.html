@@ -96,7 +96,13 @@
                         <div class="task" [ngStyle]="{'color': task.priorityColor}">
                             <div class="left-content">
                                 <input type="checkbox" [checked]="task.isCompleted" (change)="markComplete(task)"/>
-                                <span class="title">{{ task.title }}</span>
+                                <span class="title"
+                                    contenteditable="true"
+                                    [textContent]="task.title"
+                                    (blur)="onEditTask(task, $event)"
+                                    (keydown)="onKeydown(task, $event)"
+                                    >
+                                </span>
                             </div>
                             <span class="day">{{ task.dueDate | date: 'MMM d' }}</span>
                         </div>
@@ -129,7 +135,13 @@
                                         <div class="subtask" [ngStyle]="{'color': subtask.priorityColor}">
                                             <div class="left-content">
                                                 <input type="checkbox" [checked]="subtask.isCompleted" (change)="markComplete(subtask)"/>
-                                                <span class="title">{{ subtask.title }}</span>
+                                                <span class="title"
+                                                    contenteditable="true"
+                                                    [textContent]="subtask.title"
+                                                    (blur)="onEditTask(subtask, $event)"
+                                                    (keydown)="onKeydown(subtask, $event)"
+                                                >
+                                                </span>
                                             </div>
                                             <span class="day">{{ subtask.dueDate | date: 'MMM d' }}</span>
                                         </div>

@@ -241,6 +241,24 @@ export class HomeComponent {
     this.saveTasks();
   }
 
+  onEditTask(item: Task | SubTask, event: any) {
+    const updatedText = event.target.innerText.trim();
+    if (updatedText) {
+      item.title = updatedText;
+      this.saveTasks();
+    } else {
+      event.target.innerText = item.title;
+    }
+  }
+
+  onKeydown(item: Task | SubTask, event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.onEditTask(item, event);
+      (event.target as HTMLElement).blur();
+      event.preventDefault();
+    }
+  }
+
   loadTasks(task:Task) {
     const stored = localStorage.getItem('task_map');
     if (stored) {
@@ -285,7 +303,6 @@ export class HomeComponent {
       }
     }
   }
-
 
   markIncomplete(item: Task | SubTask, parentTask?: Task) {
     const stored = localStorage.getItem('task_map');
