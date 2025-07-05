@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { DUMMY_MENU_LIST } from '../dummy-menu-list';
 import { Router } from '@angular/router';
 import { ListComponent } from './list/list.component';
@@ -8,7 +8,7 @@ import { ListComponent } from './list/list.component';
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.scss'
 })
-export class MenuComponent {
+export class MenuComponent implements OnInit{
   menu_list=DUMMY_MENU_LIST;
   selected!:boolean;
   isNew!:boolean;
@@ -20,6 +20,10 @@ export class MenuComponent {
 
   originalMenuIds: Set<string> = new Set();
   constructor(private router:Router) {
+    
+  }
+
+  ngOnInit() {
     const savedMenu = localStorage.getItem('menu_list');
     if (savedMenu) {
       this.menu_list = JSON.parse(savedMenu);

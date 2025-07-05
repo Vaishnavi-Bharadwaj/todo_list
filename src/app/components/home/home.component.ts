@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { MenuComponent } from './menu/menu.component';
 import { TasksComponent } from './menu/tasks/tasks.component';
 import { DUMMY_MENU_LIST } from './dummy-menu-list';
@@ -44,12 +44,12 @@ interface TaskMap {
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   isCloseMenu:boolean=false;
   showDate=false;
   preventBlur = false;
   openDropdownId: string | null = null;
-  category_id: string;
+  category_id: string='';
   todayTasks: Task[] = [];
   todayNewtask: Partial<Task> = { title: '', dueDate: '' };  
   taskMap: TaskMap = {};
@@ -67,7 +67,11 @@ export class HomeComponent {
   }
 
   category_list:Category[]=[];
-  constructor() {
+  // constructor() {
+    
+  // }
+
+  ngOnInit(){
     const menu_list = localStorage.getItem('menu_list');
     if (menu_list) {
       this.category_list = JSON.parse(menu_list);
