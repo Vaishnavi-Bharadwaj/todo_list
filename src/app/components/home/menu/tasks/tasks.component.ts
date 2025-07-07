@@ -65,8 +65,10 @@ export class TasksComponent {
         this.categoryId=this.category_list[0].menu_id;
       }
     }
-    this.loadTasks();
+  }
 
+  ngOnInit() {
+    this.loadTasks();
   }
 
   get todo_tasks(): Task[] {
