@@ -17,7 +17,6 @@ import { TaskMap } from '../../taskmap.model';
 
 export class TasksComponent implements OnInit{
   isCloseMenu:boolean=false;
-  @Input() categoryId!: string;
   category_list:Category[]=[];
   showInput: boolean = false;
   showDate=false;
@@ -26,7 +25,8 @@ export class TasksComponent implements OnInit{
   newTask: Partial<Task> = { title: '', dueDate: '' };    
   openDropdownId: string | null = null;
   taskMap: TaskMap = {};
-
+  @Input() categoryId!: string;
+  
   constructor() {
     const menu_list=localStorage.getItem('menu_list');
     if(menu_list)
@@ -41,6 +41,21 @@ export class TasksComponent implements OnInit{
 
   ngOnInit() {
     this.loadTasks();
+  }
+
+  @HostListener('document:click', ['$event'])
+  handleOutsideClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.dropdown-wrapper')) {
+      this.openDropdownId = null;
+    }
+
+    this.todo_tasks.forEach(task => {
+      const subtaskInput = document.getElementById('subtask-input-' + task.id);
+      if (subtaskInput && !subtaskInput.contains(target)) {
+        task.showSubtaskInput = false;
+      }
+    });
   }
 
   get todo_tasks(): Task[] {
@@ -123,22 +138,6 @@ export class TasksComponent implements OnInit{
 
   toggleDropdown(task_id: string) {
     this.openDropdownId = this.openDropdownId === task_id ? null : task_id;
-  }
-
-  @HostListener('document:click', ['$event'])
-  handleOutsideClick(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.dropdown-wrapper')) {
-      this.openDropdownId = null;
-    }
-
-    this.todo_tasks.forEach(task => {
-      const subtaskInput = document.getElementById('subtask-input-' + task.id);
-      if (subtaskInput && !subtaskInput.contains(target)) {
-        task.showSubtaskInput = false;
-      }
-    });
-
   }
 
   onDeleteTask(task_id: string) {

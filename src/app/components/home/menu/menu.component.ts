@@ -16,9 +16,16 @@ export class MenuComponent implements OnInit{
   isDropDown!:boolean;
   openDropdownId: string | null = null;
   selectedCategoryId: string | null = null;
-
-
   originalMenuIds: Set<string> = new Set();
+  @Input({required:true}) category!: {
+    menu_id:string;
+    name:string;
+    icon:string;
+    path:string;
+  }
+
+  @Output() select=new EventEmitter();
+
   constructor(private router:Router) {
     
   }
@@ -37,6 +44,11 @@ export class MenuComponent implements OnInit{
     {
       this.originalMenuIds.add(menu.menu_id);
     }
+  }
+
+  @HostListener('document:click')
+  handleOutsideClick() {
+    this.openDropdownId = null;
   }
 
   onSelectMenu(path:string)
@@ -98,26 +110,10 @@ export class MenuComponent implements OnInit{
     this.router.navigate(['/home'])
   }
 
-  
   toggleDropdown(menu_id: string) {
     this.openDropdownId = this.openDropdownId === menu_id ? null : menu_id;
   }
 
-  @HostListener('document:click')
-  handleOutsideClick() {
-    this.openDropdownId = null;
-  }
-
-  //Adding tasks to each catergory
-  @Input({required:true}) category!: {
-    menu_id:string;
-    name:string;
-    icon:string;
-    path:string;
-  }
-
-  @Output() select=new EventEmitter();
-  
   onSelectCategory(menu_id:string)
   {
     this.selectedCategoryId = menu_id;

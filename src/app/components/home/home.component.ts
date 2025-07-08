@@ -27,18 +27,6 @@ export class HomeComponent implements OnInit {
   todayNewtask: Partial<Task> = { title: '', dueDate: '' };  
   taskMap: TaskMap = {};
   today = formatDate(new Date(), 'yyyy-MM-dd', 'en');
-
-  hideDatePicker() { 
-    if (!this.preventBlur) {
-      this.showDate = false;
-    }
-  }
-
-  onCloseMenu()
-  {
-    this.isCloseMenu=!this.isCloseMenu; //toggle
-  }
-
   category_list:Category[]=[];
   // constructor() {
     
@@ -59,6 +47,32 @@ export class HomeComponent implements OnInit {
       this.taskMap  = JSON.parse(stored);
     }
     this.loadTodayTasks();
+  }
+
+  @HostListener('document:click', ['$event'])
+  handleOutsideClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.dropdown-wrapper')) {
+      this.openDropdownId = null;
+    }
+
+    this.todayTasks.forEach(task => {
+      const subtaskInput = document.getElementById('subtask-input-' + task.id);
+      if (subtaskInput && !subtaskInput.contains(target)) {
+        task.showSubtaskInput = false;
+      }
+    });
+  }
+
+  hideDatePicker() { 
+    if (!this.preventBlur) {
+      this.showDate = false;
+    }
+  }
+
+  onCloseMenu()
+  {
+    this.isCloseMenu=!this.isCloseMenu; //toggle
   }
 
   loadTodayTasks() {
@@ -316,21 +330,6 @@ export class HomeComponent implements OnInit {
 
   toggleDropdown(task_id: string) {
     this.openDropdownId = this.openDropdownId === task_id ? null : task_id;
-  }
-
-  @HostListener('document:click', ['$event'])
-  handleOutsideClick(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.dropdown-wrapper')) {
-      this.openDropdownId = null;
-    }
-
-    this.todayTasks.forEach(task => {
-      const subtaskInput = document.getElementById('subtask-input-' + task.id);
-      if (subtaskInput && !subtaskInput.contains(target)) {
-        task.showSubtaskInput = false;
-      }
-    });
   }
 
   get pinnedTasks(): Task[] {

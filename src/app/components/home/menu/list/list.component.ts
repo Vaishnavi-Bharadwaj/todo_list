@@ -8,12 +8,12 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './list.component.scss'
 })
 export class ListComponent {
+  enteredName:string='';
   @Output() canceltask=new EventEmitter();
   @Output() add=new EventEmitter<{
     name:string;
   }>();
-  enteredName:string='';
-
+  
   onCancelAddList()
   {
     this.canceltask.emit();
