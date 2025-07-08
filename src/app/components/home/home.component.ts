@@ -5,38 +5,10 @@ import { DUMMY_MENU_LIST } from './dummy-menu-list';
 import { FormsModule } from '@angular/forms';
 import { DatePipe, formatDate } from '@angular/common';
 import { CommonModule } from '@angular/common';
-interface Category {
-  menu_id: string;
-  name: string;
-  icon: string;
-  path:string;
-}
-
-interface Task {
-  id: string;
-  title: string;
-  dueDate: string;
-  isPinned: boolean;
-  isCompleted: boolean;
-  subTasks?: SubTask[];
-  priorityColor: string;
-  newSubtaskTitle?: string;
-  newSubtaskDate?:string;
-  showSubtaskInput?: boolean;
-}
-
-interface SubTask {
-  id: string;
-  title: string;
-  dueDate: string;
-  isPinned: boolean;
-  isCompleted: boolean;
-  priorityColor: string;
-}
-
-interface TaskMap {
-  [menu_id: string]: Task[];
-}
+import { Category } from './category.model';
+import { Task } from './task.model';
+import { SubTask } from './subtask.model';
+import { TaskMap } from './taskmap.model';
 
 @Component({
   selector: 'app-home',
@@ -44,6 +16,7 @@ interface TaskMap {
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
+
 export class HomeComponent implements OnInit {
   isCloseMenu:boolean=false;
   showDate=false;
