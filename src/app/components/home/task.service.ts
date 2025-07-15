@@ -21,14 +21,12 @@ export class TaskService {
     localStorage.setItem('task_map', JSON.stringify(taskMap));
   }
 
-  //add a new task to the specified category
   addTask(categoryId: string, task: Task): void {
     const taskMap = this.getTaskMap();
     (taskMap[categoryId] ||= []).push(task);
     this.saveTaskMap(taskMap);
   }
 
-  //get todays tasks
   getTodayTasks(): Task[] {
     const today = formatDate(new Date(), 'yyyy-MM-dd', 'en');
     const todayTasks: Task[] = [];
