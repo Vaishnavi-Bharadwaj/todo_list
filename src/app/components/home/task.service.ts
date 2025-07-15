@@ -28,6 +28,7 @@ export class TaskService {
     this.saveTaskMap(taskMap);
   }
 
+  //get todays tasks
   getTodayTasks(): Task[] {
     const today = formatDate(new Date(), 'yyyy-MM-dd', 'en');
     const todayTasks: Task[] = [];
