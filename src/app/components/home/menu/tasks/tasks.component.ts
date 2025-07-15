@@ -7,7 +7,7 @@ import { Category } from '../../category.model';
 import { Task } from '../../task.model';
 import { SubTask } from '../../subtask.model';
 import { TaskMap } from '../../taskmap.model';
-
+import { TaskService } from '../../task.service';
 @Component({
   selector: 'app-tasks',
   imports: [MenuComponent, FormsModule, DatePipe, CommonModule],
@@ -27,7 +27,7 @@ export class TasksComponent implements OnInit{
   taskMap: TaskMap = {};
   @Input() categoryId!: string;
   
-  constructor() {
+  constructor(private taskService: TaskService) {
     const menu_list=localStorage.getItem('menu_list');
     if(menu_list)
     {
@@ -56,10 +56,6 @@ export class TasksComponent implements OnInit{
         task.showSubtaskInput = false;
       }
     });
-  }
-
-  get todo_tasks(): Task[] {
-    return this.taskMap[this.categoryId] || [];
   }
 
   onCloseMenu()
@@ -101,12 +97,9 @@ export class TasksComponent implements OnInit{
       isCompleted: false,
       priorityColor: 'black'
     };
-    if (!this.taskMap[this.categoryId]) {
-      this.taskMap[this.categoryId] = [];
-    }
 
-    this.taskMap[this.categoryId].push(task);
-    this.saveTasks();
+    this.taskService.addTask(this.categoryId, task);
+    this.loadTasks()
     this.newTask = { title: '', dueDate: '' };
   }
 
@@ -269,6 +262,18 @@ export class TasksComponent implements OnInit{
     this.saveTasks();
   }
 
+  saveTasks() {
+    this.taskService.saveTaskMap(this.taskMap);
+  }
+
+  loadTasks() {
+    this.taskMap = this.taskService.getTaskMap();
+  }
+
+  get todo_tasks(): Task[] {
+    return this.taskMap[this.categoryId] || [];
+  }
+
   get activeTasks(): Task[] {
     return this.todo_tasks.filter(t => !t.isCompleted && !t.isPinned);
   }
@@ -283,14 +288,5 @@ export class TasksComponent implements OnInit{
     return this.todo_tasks.filter(t => t.isPinned && !t.isCompleted);
   }
 
-  saveTasks() {
-    localStorage.setItem('task_map', JSON.stringify(this.taskMap));
-  }
-
-  loadTasks() {
-    const stored = localStorage.getItem('task_map');
-    if (stored) {
-      this.taskMap = JSON.parse(stored);
-    }
-  }
+  
 }

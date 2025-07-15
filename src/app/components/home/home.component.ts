@@ -9,6 +9,7 @@ import { Category } from './category.model';
 import { Task } from './task.model';
 import { SubTask } from './subtask.model';
 import { TaskMap } from './taskmap.model';
+import { TaskService } from './task.service';
 
 @Component({
   selector: 'app-home',
@@ -28,9 +29,9 @@ export class HomeComponent implements OnInit {
   taskMap: TaskMap = {};
   today = formatDate(new Date(), 'yyyy-MM-dd', 'en');
   category_list:Category[]=[];
-  // constructor() {
+  constructor(private taskService:TaskService) {
     
-  // }
+  }
 
   ngOnInit(){
     const menu_list = localStorage.getItem('menu_list');
@@ -41,11 +42,7 @@ export class HomeComponent implements OnInit {
       localStorage.setItem('menu_list', JSON.stringify(DUMMY_MENU_LIST)); // Save defaults back
     }
     this.category_id=this.category_list[0].menu_id;
-    
-    const stored = localStorage.getItem('task_map');
-    if (stored) {
-      this.taskMap  = JSON.parse(stored);
-    }
+
     this.loadTodayTasks();
   }
 
@@ -76,26 +73,8 @@ export class HomeComponent implements OnInit {
   }
 
   loadTodayTasks() {
-    const stored = localStorage.getItem('task_map');
-    if (stored) {
-      this.taskMap = JSON.parse(stored);
-      const today = formatDate(new Date(), 'yyyy-MM-dd', 'en');
-      this.todayTasks = [];
-
-      Object.values(this.taskMap).forEach(taskList => {
-        taskList.forEach(task => {
-          const isTaskDueToday = task.dueDate === today;
-          if (isTaskDueToday) {
-            this.todayTasks.push(task);
-          } else if (task.subTasks && task.subTasks.length > 0) {
-            const subtasksDueToday = task.subTasks.filter(subtask => subtask.dueDate === today);
-            subtasksDueToday.forEach(subtask => {
-              this.todayTasks.push(subtask);
-            });
-          }
-        });
-      });
-    }
+    this.taskMap   = this.taskService.getTaskMap();
+    this.todayTasks = this.taskService.getTodayTasks();
 
     this.todayTasks.forEach(item => {
       item.showSubtaskInput = false;
@@ -120,13 +99,7 @@ export class HomeComponent implements OnInit {
       priorityColor: 'black'
     };
 
-    if (!this.taskMap[this.category_id]) {
-      this.taskMap[this.category_id] = [];
-    }
-
-    this.taskMap[this.category_id].push(task);
-    localStorage.setItem('task_map', JSON.stringify(this.taskMap));
-
+    this.taskService.addTask(this.category_id, task);
     this.todayNewtask = { title: '', dueDate: '' };
     this.loadTodayTasks();
   }
@@ -153,15 +126,15 @@ export class HomeComponent implements OnInit {
     task.subTasks.push(subtask);
     task.newSubtaskTitle='';
     task.newSubtaskDate='';
-    this.saveTasks();
+
+    this.taskService.replaceParentTask(task);
+    this.loadTodayTasks();
     task.showSubtaskInput=false;
   }
 
   onDeleteTask(task_id: string) {
-    const stored = localStorage.getItem('task_map');
-    if (!stored) return;
-
-    let taskMap: TaskMap = JSON.parse(stored);
+    let taskMap: TaskMap = this.taskService.getTaskMap();
+    if (!Object.keys(taskMap).length) return; 
     let isDeleted = false;
 
     Object.keys(taskMap).forEach(menuId => {
@@ -185,7 +158,7 @@ export class HomeComponent implements OnInit {
     });
 
     if (isDeleted) {
-      localStorage.setItem('task_map', JSON.stringify(taskMap));
+      this.taskService.saveTaskMap(taskMap);
       this.loadTodayTasks(); 
     }
   }
@@ -250,21 +223,6 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  loadTasks(task:Task) {
-    const stored = localStorage.getItem('task_map');
-    if (stored) {
-      const taskMap: TaskMap = JSON.parse(stored);
-      for (const menuId in taskMap) {
-        const taskList = taskMap[menuId];
-        const index = taskList.findIndex(t => t.id === task.id);
-        if (index !== -1) {
-          taskMap[menuId][index] = task;
-          break;
-        }
-      }
-    }
-  }
-
   markComplete(item: Task | SubTask) {
     for (const menuId in this.taskMap) {
       for (const task of this.taskMap[menuId]) {
@@ -305,8 +263,8 @@ export class HomeComponent implements OnInit {
         if (task.id === item.id) {
           task.isCompleted = false;
           // When main task is unchecked, do not change the subtasks
-          localStorage.setItem('task_map', JSON.stringify(taskMap));
-          this.loadTodayTasks();
+          this.taskService.saveTaskMap(taskMap);   
+          this.loadTodayTasks();   
           return;
         }
 
@@ -319,8 +277,8 @@ export class HomeComponent implements OnInit {
             if (task.isCompleted) {
               task.isCompleted = false;
             }
-            localStorage.setItem('task_map', JSON.stringify(taskMap));
-            this.loadTodayTasks();
+            this.taskService.saveTaskMap(taskMap); 
+            this.loadTodayTasks();   
             return;
           }
         }
@@ -330,6 +288,35 @@ export class HomeComponent implements OnInit {
 
   toggleDropdown(task_id: string) {
     this.openDropdownId = this.openDropdownId === task_id ? null : task_id;
+  }
+
+  saveTasks() {
+    this.taskService.saveTaskMap(this.taskMap);
+  }
+
+  loadTasks(task:Task) {
+    const taskMap: TaskMap = this.taskService.getTaskMap();
+    for (const menuId in taskMap) {
+      const taskList = taskMap[menuId];
+      const index = taskList.findIndex(t => t.id === task.id);
+      if (index !== -1) {
+        taskList[index] = task;
+        break;
+      }
+
+      for (const t of taskList) {
+        if (t.subTasks?.length) {
+          const sIdx = t.subTasks.findIndex(s => s.id === task.id);
+          if (sIdx !== -1) 
+          { 
+            t.subTasks[sIdx] = task as any; 
+            break; 
+          }
+        }
+      }
+    }
+    this.taskMap = taskMap;
+    this.saveTasks();
   }
 
   get pinnedTasks(): Task[] {
@@ -344,10 +331,6 @@ export class HomeComponent implements OnInit {
     return this.todayTasks.filter(task => 
       task.isCompleted || (task.subTasks && task.subTasks.length > 0 && task.subTasks.some(sub => sub.isCompleted))
     );
-  }
-
-  saveTasks() {
-    localStorage.setItem('task_map', JSON.stringify(this.taskMap));
   }
 
 }
