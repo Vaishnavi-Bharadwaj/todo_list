@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit, OnDestroy } from '@angular/core';
 import { MenuComponent } from '../menu.component';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
@@ -8,6 +8,8 @@ import { Task } from '../../task.model';
 import { SubTask } from '../../subtask.model';
 import { TaskMap } from '../../taskmap.model';
 import { TaskService } from '../../task.service';
+import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-tasks',
   imports: [MenuComponent, FormsModule, DatePipe, CommonModule],
@@ -15,7 +17,7 @@ import { TaskService } from '../../task.service';
   styleUrl: './tasks.component.scss'
 })
 
-export class TasksComponent implements OnInit{
+export class TasksComponent implements OnInit, OnDestroy{
   isCloseMenu:boolean=false;
   category_list:Category[]=[];
   showInput: boolean = false;
@@ -27,6 +29,7 @@ export class TasksComponent implements OnInit{
   taskMap: TaskMap = {};
   @Input() categoryId!: string;
   
+  private sub!: Subscription;
   constructor(private taskService: TaskService) {
     const menu_list=localStorage.getItem('menu_list');
     if(menu_list)
@@ -40,8 +43,10 @@ export class TasksComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.loadTasks();
+    this.sub = this.taskService.taskMapObs$.subscribe(map => (this.taskMap = map));
   }
+
+  ngOnDestroy() { this.sub.unsubscribe(); }
 
   @HostListener('document:click', ['$event'])
   handleOutsideClick(event: MouseEvent) {
@@ -99,7 +104,6 @@ export class TasksComponent implements OnInit{
     };
 
     this.taskService.addTask(this.categoryId, task);
-    this.loadTasks()
     this.newTask = { title: '', dueDate: '' };
   }
 
@@ -264,10 +268,6 @@ export class TasksComponent implements OnInit{
 
   saveTasks() {
     this.taskService.saveTaskMap(this.taskMap);
-  }
-
-  loadTasks() {
-    this.taskMap = this.taskService.getTaskMap();
   }
 
   get todo_tasks(): Task[] {

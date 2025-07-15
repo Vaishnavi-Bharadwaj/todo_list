@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { MenuComponent } from './menu/menu.component';
 import { TasksComponent } from './menu/tasks/tasks.component';
 import { DUMMY_MENU_LIST } from './dummy-menu-list';
@@ -10,6 +10,7 @@ import { Task } from './task.model';
 import { SubTask } from './subtask.model';
 import { TaskMap } from './taskmap.model';
 import { TaskService } from './task.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -18,7 +19,7 @@ import { TaskService } from './task.service';
   styleUrl: './home.component.scss'
 })
 
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   isCloseMenu:boolean=false;
   showDate=false;
   preventBlur = false;
@@ -29,6 +30,7 @@ export class HomeComponent implements OnInit {
   taskMap: TaskMap = {};
   today = formatDate(new Date(), 'yyyy-MM-dd', 'en');
   category_list:Category[]=[];
+  private sub!: Subscription;
   constructor(private taskService:TaskService) {
     
   }
@@ -43,8 +45,14 @@ export class HomeComponent implements OnInit {
     }
     this.category_id=this.category_list[0].menu_id;
 
-    this.loadTodayTasks();
+    this.sub = this.taskService.taskMapObs$
+    .subscribe(map => {
+      this.taskMap   = map;
+      this.todayTasks = this.taskService.getTodayTasks();
+    });
   }
+
+  ngOnDestroy() { this.sub.unsubscribe(); }
 
   @HostListener('document:click', ['$event'])
   handleOutsideClick(event: MouseEvent) {
@@ -72,15 +80,6 @@ export class HomeComponent implements OnInit {
     this.isCloseMenu=!this.isCloseMenu; //toggle
   }
 
-  loadTodayTasks() {
-    this.taskMap   = this.taskService.getTaskMap();
-    this.todayTasks = this.taskService.getTodayTasks();
-
-    this.todayTasks.forEach(item => {
-      item.showSubtaskInput = false;
-    });
-  }
-
   onSelectCategory(menu_id:string)
   {
     this.category_id=menu_id;
@@ -101,7 +100,6 @@ export class HomeComponent implements OnInit {
 
     this.taskService.addTask(this.category_id, task);
     this.todayNewtask = { title: '', dueDate: '' };
-    this.loadTodayTasks();
   }
 
   showSubtaskInput(task: Task) {
@@ -128,7 +126,6 @@ export class HomeComponent implements OnInit {
     task.newSubtaskDate='';
 
     this.taskService.replaceParentTask(task);
-    this.loadTodayTasks();
     task.showSubtaskInput=false;
   }
 
@@ -159,7 +156,6 @@ export class HomeComponent implements OnInit {
 
     if (isDeleted) {
       this.taskService.saveTaskMap(taskMap);
-      this.loadTodayTasks(); 
     }
   }
 
@@ -233,7 +229,6 @@ export class HomeComponent implements OnInit {
             task.subTasks.forEach(subtask => subtask.isCompleted = true);
           }
           this.saveTasks();
-          this.loadTodayTasks();
           return;
         }
 
@@ -245,7 +240,6 @@ export class HomeComponent implements OnInit {
             // When a subtask is marked complete, keep the parent incomplete
             task.isCompleted = false;
             this.saveTasks();
-            this.loadTodayTasks();
             return;
           }
         }
@@ -254,9 +248,7 @@ export class HomeComponent implements OnInit {
   }
 
   markIncomplete(item: Task | SubTask, parentTask?: Task) {
-    const stored = localStorage.getItem('task_map');
-    if (!stored) return;
-    let taskMap: TaskMap = JSON.parse(stored);
+    const taskMap = this.taskService.getTaskMap();
     for (const menuId in taskMap) {
       for (const task of taskMap[menuId]) {
         // Main Task
@@ -264,7 +256,6 @@ export class HomeComponent implements OnInit {
           task.isCompleted = false;
           // When main task is unchecked, do not change the subtasks
           this.taskService.saveTaskMap(taskMap);   
-          this.loadTodayTasks();   
           return;
         }
 
@@ -278,7 +269,6 @@ export class HomeComponent implements OnInit {
               task.isCompleted = false;
             }
             this.taskService.saveTaskMap(taskMap); 
-            this.loadTodayTasks();   
             return;
           }
         }

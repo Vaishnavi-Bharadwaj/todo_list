@@ -8,12 +8,16 @@ import { BehaviorSubject } from 'rxjs';
 export class TaskService {
   constructor() {}
 
+  private readonly taskMap$ = new BehaviorSubject<TaskMap>(this.readFromStorage());
+
+  readonly taskMapObs$ = this.taskMap$.asObservable();
+
   getTaskMap(): TaskMap {
-    const stored = localStorage.getItem('task_map');
-    return stored ? JSON.parse(stored) : {};
+    return structuredClone(this.taskMap$.value);
   }
 
   saveTaskMap(taskMap: TaskMap): void {
+    this.taskMap$.next(taskMap);
     localStorage.setItem('task_map', JSON.stringify(taskMap));
   }
 
@@ -25,21 +29,13 @@ export class TaskService {
 
   getTodayTasks(): Task[] {
     const today = formatDate(new Date(), 'yyyy-MM-dd', 'en');
-    const taskMap = this.getTaskMap();
     const todayTasks: Task[] = [];
-
-    Object.values(taskMap).forEach(taskList =>
-      taskList.forEach(task => {
-        if (task.dueDate === today) {
-          todayTasks.push(task);
-        } else if (task.subTasks?.length) {
-          task.subTasks
-            .filter(sub => sub.dueDate === today)
-            .forEach(sub => todayTasks.push(sub));
-        }
+    Object.values(this.taskMap$.value).forEach(list =>
+      list.forEach(t => {
+        if (t.dueDate === today) 
+          todayTasks.push(t);
       })
     );
-
     return todayTasks;
   }
 
@@ -49,10 +45,15 @@ export class TaskService {
       const idx = taskMap[cat].findIndex(t => t.id === updatedParent.id);
       if (idx !== -1) {
         taskMap[cat][idx] = updatedParent;   
-        this.saveTaskMap(taskMap);           
-        return;
+        break;
       }
     }
+    this.saveTaskMap(taskMap);
+  }
+
+  private readFromStorage(): TaskMap {
+    const stored = localStorage.getItem('task_map');
+    return stored ? JSON.parse(stored) : {};
   }
 
 }
